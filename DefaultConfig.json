@@ -1,0 +1,11 @@
+{
+    "batch_size": 64,
+    "test_batch_size": 64,
+    "epochs": 2,
+    "learning_rate": 0.001,
+    "learning_rate_gamma": 0.7,
+    "dry_run": false,
+    "log_to_tensorboard": false,
+    "log_interval":10,
+    "momentum": 0.0
+}
