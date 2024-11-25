@@ -1,3 +1,7 @@
+"""
+This script demonstrates training and evaluation of a Spatial Transformer Network (STN) on the
+MNIST dataset, including visualization of spatial transformations.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 from common.utils.helper import select_default_device
 from common.utils.train import train_and_evaluate

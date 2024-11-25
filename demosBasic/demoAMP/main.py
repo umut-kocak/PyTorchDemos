@@ -1,3 +1,7 @@
+"""
+This script demonstrates training a fully connected neural network with configurable
+precision settings, including mixed precision with gradient scaling.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 import common.utils.helper as helper
 import common.utils.train as train

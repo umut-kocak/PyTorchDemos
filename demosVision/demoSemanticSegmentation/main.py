@@ -1,3 +1,7 @@
+"""
+This script demonstrates semantic segmentation using a pre-trained FCN-ResNet50 model,
+visualizing class-specific masks and overlaying them on images.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 from common.utils.visualise import display_grid
 

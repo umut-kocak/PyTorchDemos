@@ -1,3 +1,7 @@
+"""
+This script demonstrates the creation and dynamic quantization of an LSTM model, 
+and compares floating-point and quantized versions in terms of size, latency, and accuracy.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 
 import os

@@ -1,3 +1,7 @@
+"""
+This script demonstrates training, evaluation, and prediction using a custom classification network
+on the FashionMNIST dataset.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 from common.models import ClassificationNet as ClassificationNet
 from common.utils.helper import select_default_device

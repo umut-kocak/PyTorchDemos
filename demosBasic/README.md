@@ -2,26 +2,38 @@
 
 The `demosBasic` folder contains a collection of fundamental PyTorch demos, each focused on a specific concept or feature to enhance understanding and practical implementation of key PyTorch functionalities.
 
-## Subfolders Overview
+## Demos Overview
 
-- **demoAMP**: Demonstrates Automatic Mixed Precision (AMP) to optimize model performance by reducing memory usage and accelerating training through mixed-precision training.
+### 1. demoAMP
+Demonstrates Automatic Mixed Precision (AMP) to optimize model performance by reducing memory usage and accelerating training through mixed-precision training.
 
-- **demoCompileAOT**: Explores Ahead-of-Time (AOT) compilation techniques in PyTorch to improve model performance by compiling parts of the model graph prior to execution.
+### 2. demoCompileAOT
+Explores Ahead-of-Time (AOT) compilation techniques in PyTorch to improve model performance by compiling parts of the model graph prior to execution.
+Highlights PyTorch's model export and optimization features.
 
-- **demoDynamicQuantization**: Shows the application of Dynamic Quantization as a post-training technique, allowing the activation parameters to be quantized dynamically for improved inference efficiency on compatible hardware.
+### 3. demoDynamicQuantization
+Compares a floating-point LSTM model with its dynamically quantized counterpart, evaluating size, latency, and accuracy to showcase PyTorch's quantization capabilities.
 
-- **demoExport**: Provides an example of exporting PyTorch models using PyTorch's native export functionality, enabling easy model saving and loading for deployment.
+### 4. demoExport
+Provides an example of exporting PyTorch models using PyTorch's native export functionality, enabling easy model saving and loading for deployment.
+Showcases basic model export, dynamic shape handling, and custom operator creation for optimized deployment.
 
-- **demoImageTransforms**: Covers common image transformation techniques, demonstrating how to preprocess image data for training and inference in computer vision models.
+### 5. demoImageTransforms
+Applies geometric, photometric, and augmentation transformations on images using PyTorch, showcasing their visual effects and preprocessing pipelines.
 
-- **demoLogging**: Illustrates best practices for logging in PyTorch, including tracking metrics, losses, and other key information during training to improve model monitoring and debugging.
+### 6. demoLogging
+Illustrates best practices for logging in PyTorch, including function compilation and analysis through logging configurations like tracing, graph generation, and fusion decisions.
 
-- **demoONNX**: Examines the options for exporting PyTorch models to ONNX, enabling model compatibility with ONNX Runtime and other ONNX-supported frameworks.
+### 7. demoONNX
+Showcases a PyTorch-based super-resolution pipeline, including ONNX export, inference time comparison, and super-resolved image generation and saving.
 
-- **demoProfiler**: Introduces PyTorch Profiler, a tool for performance analysis, helping identify bottlenecks and optimize model performance during training and inference.
+### 8. demoProfiler
+Profiles a ResNet18 model on CPU and GPU, measuring inference time, memory usage, and tracing long-running tasks with customizable schedules, providing trace logs for optimization insights.
 
-- **demoPruning**: Demonstrates model pruning techniques to reduce the size of neural networks by removing redundant parameters, resulting in a more efficient model without significantly affecting performance.
+### 9. demoPruning
+Applies various pruning techniques to a LeNet model, including structured, unstructured, global, and custom methods, showcasing sparsity optimization and flexibility in model size reduction.
 
-- **demoStaticQuantization**: Details Static Quantization as a post-training technique, where model weights and activations are quantized to optimize inference performance on compatible hardware.
+### 10. demoStaticQuantization
+Performs static quantization of a PyTorch model, comparing FP32 and INT8 formats in terms of size, latency, and accuracy, highlighting the benefits of quantization for deployment.
 
 Each subfolder contains a standalone Python demo, presenting the core concept in a clear and practical manner to support learning and experimentation with PyTorch.

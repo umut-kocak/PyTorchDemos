@@ -1,3 +1,7 @@
+"""
+This script demonstrates training and fine-tuning a ResNet18 model on the Hymenoptera dataset,
+including data visualization and predictions.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 from common.utils.helper import select_default_device
 from common.utils.train import train_single_epoch

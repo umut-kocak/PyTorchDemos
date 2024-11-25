@@ -1,3 +1,7 @@
+"""
+This script demonstrates object detection using Faster R-CNN on two input images,
+visualizing the detected bounding boxes.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 from common.utils.visualise import display_grid
 from common.utils.arg_parser import get_args as get_common_args

@@ -1,3 +1,7 @@
+"""
+This script demonstrates the use of `torch.compile` to compile and analyze a simple function,
+including tracing, graph generation, fusion decisions, and output code logging.
+"""
 import logging
 import torch
 

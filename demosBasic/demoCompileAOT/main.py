@@ -1,3 +1,7 @@
+"""
+This script demonstrates exporting a PyTorch ResNet18 model using AOTInductor, 
+then compares the inference times of the exported model with torch.compile optimization.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 import common.utils.helper as helper
 import os

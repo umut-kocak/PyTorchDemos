@@ -1,3 +1,7 @@
+"""
+This script demonstrates loading a pre-trained super-resolution model, exporting it to ONNX format,
+comparing PyTorch and ONNX inference times, and saving super-resolved images.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 from common.models import SuperResolutionNet
 

@@ -1,3 +1,7 @@
+"""
+This script demonstrates keypoint detection on images using a pre-trained Keypoint R-CNN model,
+visualizing detected keypoints with optional skeleton connectivity.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 from common.utils.visualise import display_grid
 

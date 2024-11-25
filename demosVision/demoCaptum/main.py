@@ -1,3 +1,7 @@
+"""
+This script demonstrates the use of a pre-trained ResNet model and Captum to compute
+and visualize occlusion-based attributions for image classification tasks.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 
 import torchvision

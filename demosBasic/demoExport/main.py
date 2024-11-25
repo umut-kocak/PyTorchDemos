@@ -1,3 +1,7 @@
+"""
+This script demonstrates the use of `torch.export` for exporting PyTorch models with examples 
+that include basic model export, handling dynamic shapes, and creating custom operators.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 import argparse
 import torch

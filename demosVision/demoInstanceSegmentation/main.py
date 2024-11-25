@@ -1,3 +1,7 @@
+"""
+This script demonstrates using a pre-trained Mask R-CNN model for instance segmentation,
+applying masks to images, and visualizing the results.
+"""
 from common.utils.arg_parser import get_args as get_common_args
 from common.utils.visualise import display_grid
 
