@@ -2,19 +2,18 @@
 This script demonstrates training and evaluation of a Spatial Transformer Network (STN) on the
 MNIST dataset, including visualization of spatial transformations.
 """
-from common.utils.arg_parser import get_args as get_common_args
-from common.utils.helper import select_default_device
-from common.utils.train import train_and_evaluate
-from common.utils.visualise import convert_image_np
-from common.models import STNNet
-
+import matplotlib.pyplot as plt
+import numpy as np
 import torch
 import torchvision
 from torchvision import datasets, transforms
 from torchvision.utils import make_grid
-import numpy as np
-import matplotlib.pyplot as plt
 
+from common.models import STNNet
+from common.utils.arg_parser import get_args as get_common_args
+from common.utils.helper import select_default_device
+from common.utils.train import train_and_evaluate
+from common.utils.visualise import convert_image_np
 
 DEFAULT_NUM_WORKERS = 4
 OVERRIDE_LEARNING_RATE = 0.01

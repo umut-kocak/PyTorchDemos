@@ -2,19 +2,19 @@
 This script demonstrates object detection using Faster R-CNN on two input images,
 visualizing the detected bounding boxes.
 """
-from common.utils.arg_parser import get_args as get_common_args
-from common.utils.visualise import display_grid
-from common.utils.arg_parser import get_args as get_common_args
-import torch
-from torchvision.io import read_image
-from torchvision.utils import make_grid
-from torchvision.utils import draw_bounding_boxes
-from torchvision.models.detection import fasterrcnn_resnet50_fpn, FasterRCNN_ResNet50_FPN_Weights
-from torchvision.transforms import v2
-
 from pathlib import Path
 from typing import List
+
 import numpy as np
+import torch
+from torchvision.io import read_image
+from torchvision.models.detection import (FasterRCNN_ResNet50_FPN_Weights,
+                                          fasterrcnn_resnet50_fpn)
+from torchvision.transforms import v2
+from torchvision.utils import draw_bounding_boxes, make_grid
+
+from common.utils.arg_parser import get_args as get_common_args
+from common.utils.visualise import display_grid
 
 # Default values as constants
 DEFAULT_IMAGE_FILE = "dog1.jpg"

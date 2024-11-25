@@ -2,17 +2,17 @@
 This script demonstrates applying various image transformations, including geometric,
 photometric, and augmentation operations, using PyTorch and torchvision utilities.
 """
-from common.utils.arg_parser import get_args as get_common_args
-from common.utils.visualise import display_grid_adapter
-from common.utils.visualise import display_grid_with_annotations
+from pathlib import Path
 
 import torch
-from torchvision.transforms import v2
-from torchvision.io import read_image
-from torchvision import tv_tensors
-
-from pathlib import Path
 from PIL import Image
+from torchvision import tv_tensors
+from torchvision.io import read_image
+from torchvision.transforms import v2
+
+from common.utils.arg_parser import get_args as get_common_args
+from common.utils.visualise import (display_grid_adapter,
+                                    display_grid_with_annotations)
 
 # Default values as constants
 DEFAULT_IMAGE_FILE = "nature.jpg"

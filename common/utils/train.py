@@ -1,12 +1,12 @@
-from common.utils.helper import log_to_tensorboard
-from common.utils.helper import select_default_device
+import os
+import tempfile
+import time
 
 import torch
 from torch.utils.data import DataLoader
 
-import os
-import tempfile
-import time
+from common.utils.helper import log_to_tensorboard, select_default_device
+
 
 def device_to_str(device):
     """

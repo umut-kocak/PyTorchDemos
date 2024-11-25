@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
-import torch
-from torchvision.utils import draw_bounding_boxes, draw_segmentation_masks, make_grid
-from torchvision.transforms.v2 import functional as F
-import torchvision.transforms.functional as TF
-
 import numpy as np
+import torch
+import torchvision.transforms.functional as TF
 from PIL import Image
+from torchvision.transforms.v2 import functional as F
+from torchvision.utils import (draw_bounding_boxes, draw_segmentation_masks,
+                               make_grid)
 
 plt.rcParams["savefig.bbox"] = 'tight'
 

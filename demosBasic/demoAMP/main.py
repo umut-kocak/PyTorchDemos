@@ -2,10 +2,11 @@
 This script demonstrates training a fully connected neural network with configurable
 precision settings, including mixed precision with gradient scaling.
 """
-from common.utils.arg_parser import get_args as get_common_args
+import torch
+
 import common.utils.helper as helper
 import common.utils.train as train
-import torch
+from common.utils.arg_parser import get_args as get_common_args
 
 # Default values as constants
 DEFAULT_INPUT_SIZE = 4096

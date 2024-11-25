@@ -3,13 +3,15 @@ This script demonstrates various pruning techniques on a PyTorch LeNet model, in
 unstructured, global, iterative, and custom pruning methods, with detailed logging of sparsity and
 parameter changes.
 """
-from common.utils.arg_parser import get_args as get_common_args
-import common.utils.helper as helper
-from common.models import LeNet
+import logging
 
 import torch
 import torch.nn.utils.prune as prune
-import logging
+
+import common.utils.helper as helper
+from common.models import LeNet
+from common.utils.arg_parser import get_args as get_common_args
+
 
 def get_args():
     """

@@ -1,6 +1,8 @@
-import torch
-import time
 import gc
+import time
+
+import torch
+
 
 def log_to_tensorboard(writer, tag, value, step):
     """

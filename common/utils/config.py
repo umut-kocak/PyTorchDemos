@@ -1,5 +1,6 @@
 import json
 
+
 class Config:
     def __init__(self, config_file: str = None):
         """

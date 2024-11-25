@@ -2,11 +2,14 @@
 This script profiles the performance of a ResNet18 model on both CPU and GPU, measuring inference
 time and memory usage, and traces long-running tasks with customizable profiling schedules.
 """
-from common.utils.arg_parser import get_args as get_common_args
+import logging
+
 import torch
 import torchvision.models as models
-from torch.profiler import profile, record_function, ProfilerActivity
-import logging
+from torch.profiler import ProfilerActivity, profile, record_function
+
+from common.utils.arg_parser import get_args as get_common_args
+
 
 def get_args():
     """

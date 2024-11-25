@@ -2,18 +2,18 @@
 This script demonstrates the use of a pre-trained ResNet model and Captum to compute
 and visualize occlusion-based attributions for image classification tasks.
 """
-from common.utils.arg_parser import get_args as get_common_args
-
-import torchvision
-from torchvision import models, transforms
-from captum.attr import Occlusion 
-from captum.attr import visualization as viz
-
-from PIL import Image
-import requests
 from io import BytesIO
-import numpy as np
 from pathlib import Path
+
+import numpy as np
+import requests
+import torchvision
+from captum.attr import Occlusion
+from captum.attr import visualization as viz
+from PIL import Image
+from torchvision import models, transforms
+
+from common.utils.arg_parser import get_args as get_common_args
 
 # Default values as constants
 DEFAULT_IMAGE_FILE = "cat_and_dog.jpg"

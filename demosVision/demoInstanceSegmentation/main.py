@@ -2,18 +2,19 @@
 This script demonstrates using a pre-trained Mask R-CNN model for instance segmentation,
 applying masks to images, and visualizing the results.
 """
-from common.utils.arg_parser import get_args as get_common_args
-from common.utils.visualise import display_grid
-
-import torch
-from torchvision.io import read_image
-from torchvision.utils import make_grid, draw_segmentation_masks
-from torchvision.models.detection import maskrcnn_resnet50_fpn, MaskRCNN_ResNet50_FPN_Weights
-from torchvision.transforms import v2
-
 from pathlib import Path
 from typing import List
+
 import numpy as np
+import torch
+from torchvision.io import read_image
+from torchvision.models.detection import (MaskRCNN_ResNet50_FPN_Weights,
+                                          maskrcnn_resnet50_fpn)
+from torchvision.transforms import v2
+from torchvision.utils import draw_segmentation_masks, make_grid
+
+from common.utils.arg_parser import get_args as get_common_args
+from common.utils.visualise import display_grid
 
 # Default values as constants
 DEFAULT_IMAGE_FILE = "dog1.jpg"

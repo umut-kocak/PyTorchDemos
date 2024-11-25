@@ -2,19 +2,18 @@
 This script demonstrates semantic segmentation using a pre-trained FCN-ResNet50 model,
 visualizing class-specific masks and overlaying them on images.
 """
-from common.utils.arg_parser import get_args as get_common_args
-from common.utils.visualise import display_grid
-
-import torch
-from torchvision.io import read_image
-from torchvision.utils import make_grid, draw_segmentation_masks
-from torchvision.models.segmentation import fcn_resnet50, FCN_ResNet50_Weights
-from torchvision.transforms import v2
-
 from pathlib import Path
 from typing import List
-import numpy as np
 
+import numpy as np
+import torch
+from torchvision.io import read_image
+from torchvision.models.segmentation import FCN_ResNet50_Weights, fcn_resnet50
+from torchvision.transforms import v2
+from torchvision.utils import draw_segmentation_masks, make_grid
+
+from common.utils.arg_parser import get_args as get_common_args
+from common.utils.visualise import display_grid
 
 # Default values as constants
 DEFAULT_IMAGE_FILE = "dog1.jpg"

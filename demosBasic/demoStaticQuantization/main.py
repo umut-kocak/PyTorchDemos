@@ -2,13 +2,15 @@
 This script demonstrates static quantization of a PyTorch model, comparing model size,
 latency, and accuracy between FP32 and INT8 formats.
 """
-from common.utils.arg_parser import get_args as get_common_args
-
-import torch
-import torch.nn as nn
 import os
 import timeit
 from pathlib import Path
+
+import torch
+import torch.nn as nn
+
+from common.utils.arg_parser import get_args as get_common_args
+
 
 class M(torch.nn.Module):
     """

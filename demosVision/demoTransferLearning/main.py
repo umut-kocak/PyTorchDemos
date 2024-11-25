@@ -2,26 +2,26 @@
 This script demonstrates training and fine-tuning a ResNet18 model on the Hymenoptera dataset,
 including data visualization and predictions.
 """
+import os
+import time
+import urllib.request
+import zipfile
+
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
+import torch.backends.cudnn as cudnn
+import torch.nn as nn
+import torch.optim as optim
+import torchvision
+from PIL import Image
+from torch.optim import lr_scheduler
+from torchvision import datasets, models, transforms
+
 from common.utils.arg_parser import get_args as get_common_args
 from common.utils.helper import select_default_device
 from common.utils.train import train_single_epoch
 from common.utils.visualise import display_image
-
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch.optim import lr_scheduler
-import torch.backends.cudnn as cudnn
-import torchvision
-from torchvision import datasets, models, transforms
-
-import matplotlib.pyplot as plt
-import numpy as np
-import os
-from PIL import Image
-import time
-import urllib.request
-import zipfile
 
 cudnn.benchmark = True
 

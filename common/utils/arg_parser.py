@@ -1,8 +1,6 @@
 import argparse
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
-import argparse
-from typing import Tuple, Optional
 
 def get_args(load_config: bool = False) -> Tuple[argparse.ArgumentParser, Optional['Config']]:
     """

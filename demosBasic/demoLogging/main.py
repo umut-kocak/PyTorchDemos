@@ -3,7 +3,9 @@ This script demonstrates the use of `torch.compile` to compile and analyze a sim
 including tracing, graph generation, fusion decisions, and output code logging.
 """
 import logging
+
 import torch
+
 
 def check_device_compatibility():
     """

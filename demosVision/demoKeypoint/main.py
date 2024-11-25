@@ -2,17 +2,18 @@
 This script demonstrates keypoint detection on images using a pre-trained Keypoint R-CNN model,
 visualizing detected keypoints with optional skeleton connectivity.
 """
-from common.utils.arg_parser import get_args as get_common_args
-from common.utils.visualise import display_grid
+from pathlib import Path
 
 import torch
-from torchvision.transforms import v2
 import torchvision.transforms.functional as F
 from torchvision.io import read_image
-from torchvision.models.detection import keypointrcnn_resnet50_fpn, KeypointRCNN_ResNet50_FPN_Weights
+from torchvision.models.detection import (KeypointRCNN_ResNet50_FPN_Weights,
+                                          keypointrcnn_resnet50_fpn)
+from torchvision.transforms import v2
 from torchvision.utils import draw_keypoints
 
-from pathlib import Path
+from common.utils.arg_parser import get_args as get_common_args
+from common.utils.visualise import display_grid
 
 # Default values as constants
 DEFAULT_IMAGE_FILE = "skateboarder.jpg"

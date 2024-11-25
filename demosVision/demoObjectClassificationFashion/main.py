@@ -2,16 +2,17 @@
 This script demonstrates training, evaluation, and prediction using a custom classification network
 on the FashionMNIST dataset.
 """
-from common.utils.arg_parser import get_args as get_common_args
-from common.models import ClassificationNet as ClassificationNet
-from common.utils.helper import select_default_device
-from common.utils.train import train_and_evaluate
+from typing import Optional, Tuple
 
 import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision.transforms import ToTensor
-from typing import Tuple, Optional
+
+from common.models import ClassificationNet as ClassificationNet
+from common.utils.arg_parser import get_args as get_common_args
+from common.utils.helper import select_default_device
+from common.utils.train import train_and_evaluate
 
 
 def get_args():

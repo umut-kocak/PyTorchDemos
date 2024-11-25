@@ -2,19 +2,19 @@
 This script demonstrates loading a pre-trained super-resolution model, exporting it to ONNX format,
 comparing PyTorch and ONNX inference times, and saving super-resolved images.
 """
-from common.utils.arg_parser import get_args as get_common_args
-from common.models import SuperResolutionNet
-
-import onnx
-import onnxruntime
-import torch.utils.model_zoo as model_zoo
-import torch.onnx
-import torchvision.transforms as transforms
+import logging
+import time
 
 import numpy as np
-import time
+import onnx
+import onnxruntime
+import torch.onnx
+import torch.utils.model_zoo as model_zoo
+import torchvision.transforms as transforms
 from PIL import Image
-import logging
+
+from common.models import SuperResolutionNet
+from common.utils.arg_parser import get_args as get_common_args
 
 # Default values as constants
 DEFAULT_MODEL_URL = "https://s3.amazonaws.com/pytorch/test_data/export/superres_epoch100-44c6958e.pth"
