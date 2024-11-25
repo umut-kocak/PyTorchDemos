@@ -17,10 +17,11 @@ from common.utils.visualise import (display_grid_adapter,
 # Default values as constants
 DEFAULT_IMAGE_FILE = "nature.jpg"
 
+
 def get_args():
     """
     Parses command-line arguments for image transformation script.
-    
+
     Returns:
         argparse.Namespace: Parsed arguments including the default image filename.
     """
@@ -29,10 +30,11 @@ def get_args():
                         help='Default example image filename')
     return parser.parse_args()
 
+
 def load_image(file_path):
     """
     Loads an image from the specified file path.
-    
+
     Args:
         file_path (str): Path to the image file.
 
@@ -45,6 +47,7 @@ def load_image(file_path):
         print(f"Error: File not found at {file_path}")
         return None
 
+
 def plot_transformations(orig_img, transformed_images, title=None, cmap=None):
     """
     Plots the original and transformed images in a grid format.
@@ -55,7 +58,12 @@ def plot_transformations(orig_img, transformed_images, title=None, cmap=None):
         title (str, optional): Optional title for the plot.
         cmap (str, optional): Colormap to apply for grayscale images.
     """
-    display_grid_adapter([orig_img] + transformed_images, title=title, cmap=cmap)
+    display_grid_adapter(
+        [orig_img] +
+        transformed_images,
+        title=title,
+        cmap=cmap)
+
 
 def geometric_transforms(orig_img):
     """
@@ -71,21 +79,36 @@ def geometric_transforms(orig_img):
     plot_transformations(orig_img, padded_imgs, title="Padding")
 
     # Resize
-    resized_imgs = [v2.Resize(size=size)(orig_img) for size in (30, 50, 100, orig_img.size)]
+    resized_imgs = [v2.Resize(size=size)(orig_img)
+                    for size in (30, 50, 100, orig_img.size)]
     plot_transformations(orig_img, resized_imgs, title="Resize")
-    
+
     # CenterCrop
-    center_crops = [v2.CenterCrop(size=size)(orig_img) for size in (30, 50, 100, orig_img.size)]
+    center_crops = [
+        v2.CenterCrop(
+            size=size)(orig_img) for size in (
+            30,
+            50,
+            100,
+            orig_img.size)]
     plot_transformations(orig_img, center_crops, title="CenterCrop")
 
     # FiveCrop
-    top_left, top_right, bottom_left, bottom_right, center = v2.FiveCrop(size=(100, 100))(orig_img)
-    plot_transformations(orig_img, [top_left, top_right, bottom_left, bottom_right, center], title="FiveCrop")
-    
+    top_left, top_right, bottom_left, bottom_right, center = v2.FiveCrop(
+        size=(100, 100))(orig_img)
+    plot_transformations(orig_img,
+                         [top_left,
+                          top_right,
+                          bottom_left,
+                          bottom_right,
+                          center],
+                         title="FiveCrop")
+
     # RandomPerspective
     perspective_transformer = v2.RandomPerspective(distortion_scale=0.6, p=1.0)
     perspective_imgs = [perspective_transformer(orig_img) for _ in range(4)]
     plot_transformations(orig_img, perspective_imgs, title="RandomPerspective")
+
 
 def photometric_transforms(orig_img):
     """
@@ -104,11 +127,12 @@ def photometric_transforms(orig_img):
     jitter = v2.ColorJitter(brightness=.5, hue=.3)
     jittered_imgs = [jitter(orig_img) for _ in range(4)]
     plot_transformations(orig_img, jittered_imgs, title="ColorJitter")
-    
+
     # GaussianBlur
     blurrer = v2.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5.))
     blurred_imgs = [blurrer(orig_img) for _ in range(4)]
     plot_transformations(orig_img, blurred_imgs, title="GaussianBlur")
+
 
 def augmentation_transforms(orig_img):
     """
@@ -120,19 +144,24 @@ def augmentation_transforms(orig_img):
     print("Applying augmentation transformations...")
 
     # AutoAugment
-    policies = [v2.AutoAugmentPolicy.CIFAR10, v2.AutoAugmentPolicy.IMAGENET, v2.AutoAugmentPolicy.SVHN]
+    policies = [
+        v2.AutoAugmentPolicy.CIFAR10,
+        v2.AutoAugmentPolicy.IMAGENET,
+        v2.AutoAugmentPolicy.SVHN]
     augmenters = [v2.AutoAugment(policy) for policy in policies]
     imgs = [
         [augmenter(orig_img) for _ in range(4)]
         for augmenter in augmenters
     ]
     row_title = [str(policy).split('.')[-1] for policy in policies]
-    display_grid_adapter([[orig_img] + row for row in imgs], title="AutoAugment Policies", row_title=row_title)
-    
+    display_grid_adapter([[orig_img] + row for row in imgs],
+                         title="AutoAugment Policies", row_title=row_title)
+
     # RandAugment
     augmenter = v2.RandAugment()
     imgs = [augmenter(orig_img) for _ in range(4)]
     plot_transformations(orig_img, imgs, title="RandAugment")
+
 
 def example_preprocess(orig_img):
     """
@@ -148,7 +177,7 @@ def example_preprocess(orig_img):
         [[15, 10, 370, 510], [275, 340, 510, 510], [130, 345, 210, 425]],
         format="XYXY", canvas_size=orig_img.size
     )
-    
+
     # Define transformation pipeline
     transform = v2.Compose([
         v2.ToImage(),
@@ -156,15 +185,17 @@ def example_preprocess(orig_img):
         v2.RandomHorizontalFlip(p=0.5),
         v2.ToDtype(torch.float32, scale=True),
     ])
-    
+
     # Apply transform
     out_img, out_boxes = transform(orig_img, boxes)
-    display_grid_with_annotations([(orig_img, boxes), (out_img, out_boxes)], title="Example Preprocessing with Bounding Boxes")
+    display_grid_with_annotations(
+        [(orig_img, boxes), (out_img, out_boxes)], title="Example Preprocessing with Bounding Boxes")
+
 
 def main():
     """
     Main function to load an image and apply various transformations.
-    
+
     The function demonstrates geometric, photometric, and augmentation transformations
     on the specified image and visualizes the results.
     """
@@ -182,6 +213,7 @@ def main():
     photometric_transforms(orig_img)
     augmentation_transforms(orig_img)
     example_preprocess(orig_img)
+
 
 if __name__ == '__main__':
     main()

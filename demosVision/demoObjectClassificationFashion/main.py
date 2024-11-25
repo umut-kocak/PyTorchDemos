@@ -67,7 +67,7 @@ def setup_data_loaders(args) -> Tuple[DataLoader, DataLoader]:
     # Initialize data loaders
     train_loader = DataLoader(training_data, **train_kwargs)
     test_loader = DataLoader(test_data, **test_kwargs)
-    
+
     return train_loader, test_loader
 
 
@@ -82,8 +82,12 @@ def initialize_model(args) -> torch.nn.Module:
         torch.nn.Module: The initialized model.
     """
     device = select_default_device(args)
-    model = ClassificationNet(input_channels=1, input_size=(28, 28), hidden_conv_dims=None, hidden_fc_dims=[512, 512], num_classes= 10).to(device)
+    model = ClassificationNet(
+        input_channels=1, input_size=(
+            28, 28), hidden_conv_dims=None, hidden_fc_dims=[
+            512, 512], num_classes=10).to(device)
     return model
+
 
 def predict_sample(model, test_data, device, classes):
     """
@@ -110,25 +114,33 @@ def main():
     """
     args = get_args()
     torch.manual_seed(args.seed)
-    
+
     # Select device and load data
     device = select_default_device(args)
     train_loader, test_loader = setup_data_loaders(args)
     model = initialize_model(args)
 
-    optimizer = torch.optim.SGD(model.parameters(), lr=args.config.learning_rate)
+    optimizer = torch.optim.SGD(
+        model.parameters(),
+        lr=args.config.learning_rate)
     criterion = torch.nn.CrossEntropyLoss()
-    train_and_evaluate(args, model, train_loader, test_loader, optimizer, criterion)
-    
+    train_and_evaluate(
+        args,
+        model,
+        train_loader,
+        test_loader,
+        optimizer,
+        criterion)
+
     # Save the trained model
     if args.save_model:
         torch.save(model.state_dict(), "object_classification.pt")
-    
+
     # Class labels for FashionMNIST
     classes = [
         "T-shirt/top", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"
     ]
-    
+
     # Perform a sample prediction
     predict_sample(model, test_loader.dataset, device, classes)
 

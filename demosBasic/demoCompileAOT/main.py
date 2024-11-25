@@ -1,5 +1,5 @@
 """
-This script demonstrates exporting a PyTorch ResNet18 model using AOTInductor, 
+This script demonstrates exporting a PyTorch ResNet18 model using AOTInductor,
 then compares the inference times of the exported model with torch.compile optimization.
 """
 import os
@@ -13,6 +13,7 @@ from common.utils.arg_parser import get_args as get_common_args
 # Default model export filename
 DEFAULT_MODEL_FILENAME = "resnet18_pt.so"
 
+
 def get_args():
     """
     Parses command-line arguments, including the output file name for the exported model.
@@ -24,6 +25,7 @@ def get_args():
     parser.add_argument('--output-model-file-name', default=DEFAULT_MODEL_FILENAME,
                         help='File name for the exported model (default: resnet18_pt.so)')
     return parser.parse_args()
+
 
 def export_model(model, example_inputs, output_model_file):
     """
@@ -37,7 +39,8 @@ def export_model(model, example_inputs, output_model_file):
     Returns:
         str: Path to the exported model file.
     """
-    batch_dim = torch.export.Dim("batch", min=2, max=32)  # Dynamic batch dimension
+    batch_dim = torch.export.Dim(
+        "batch", min=2, max=32)  # Dynamic batch dimension
     aot_compile_options = {"aot_inductor.output_path": output_model_file}
 
     exported_program = torch.export.export(
@@ -45,7 +48,7 @@ def export_model(model, example_inputs, output_model_file):
         example_inputs,
         dynamic_shapes={"x": {0: batch_dim}},  # Dynamic shape specification
     )
-    
+
     torch._inductor.aot_compile(
         exported_program.module(),
         example_inputs,
@@ -53,6 +56,7 @@ def export_model(model, example_inputs, output_model_file):
     )
 
     return output_model_file
+
 
 def timed_inference(model, example_input, label):
     """
@@ -65,8 +69,12 @@ def timed_inference(model, example_input, label):
     """
     torch._dynamo.reset()
     with torch.inference_mode():
-        _, time_taken = helper.timed_function_call(lambda: model(example_input), True)
-        print(f"Time taken for first inference with {label} is {time_taken:.2f} ms")
+        _, time_taken = helper.timed_function_call(
+            lambda: model(example_input), True)
+        print(
+            f"Time taken for first inference with {label} is {
+                time_taken:.2f} ms")
+
 
 def main():
     """
@@ -103,7 +111,6 @@ def main():
     model = torch.compile(model)
     timed_inference(model, example_input_single, label="torch.compile")
 
+
 if __name__ == '__main__':
     main()
-
-

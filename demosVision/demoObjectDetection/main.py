@@ -20,6 +20,7 @@ from common.utils.visualise import display_grid
 DEFAULT_IMAGE_FILE = "dog1.jpg"
 DEFAULT_IMAGE_FILE2 = "dog2.jpg"
 
+
 def get_args():
     """
     Parses command-line arguments and returns the configuration and arguments.
@@ -36,7 +37,8 @@ def get_args():
     return parser.parse_args()
 
 
-def load_images(image_paths: List[str], size : tuple=(400, 600)) -> List[torch.Tensor]:
+def load_images(image_paths: List[str], size: tuple = (
+        400, 600)) -> List[torch.Tensor]:
     """
     Loads and preprocesses images from specified paths.
 
@@ -50,6 +52,7 @@ def load_images(image_paths: List[str], size : tuple=(400, 600)) -> List[torch.T
     images = [read_image(path) for path in image_paths]
     images = [v2.Resize(size=size)(orig_img) for orig_img in images]
     return images
+
 
 def main():
 
@@ -75,12 +78,14 @@ def main():
     batch = torch.stack([transform(img) for img in images])
     with torch.no_grad():
         outputs = model(batch)
-    #print(outputs)
+    # print(outputs)
 
-    # Plot the bounding boxes detedted by FasterRCNN with ascore greater than a given threshold.
+    # Plot the bounding boxes detedted by FasterRCNN with ascore greater than
+    # a given threshold.
     score_threshold = .8
     dogs_with_boxes = [
-        draw_bounding_boxes(dog_int, boxes=output['boxes'][output['scores'] > score_threshold], width=4)
+        draw_bounding_boxes(
+            dog_int, boxes=output['boxes'][output['scores'] > score_threshold], width=4)
         for dog_int, output in zip(images, outputs)
     ]
     display_grid(dogs_with_boxes, title="Detections")

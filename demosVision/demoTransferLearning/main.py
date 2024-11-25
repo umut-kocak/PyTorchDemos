@@ -33,6 +33,7 @@ OVERRIDE_MOMENTUM = 0.9
 DEFAULT_NUM_WORKERS = 4
 DEFAULT_STEP_SIZE = 7
 
+
 def get_args():
     """
     Parses command-line arguments for model and training configurations.
@@ -61,6 +62,7 @@ def get_args():
     args.config = config
     return args
 
+
 def prepare_data_transforms():
     """Defines data augmentation and normalization for training and validation."""
     return {
@@ -78,6 +80,7 @@ def prepare_data_transforms():
         ]),
     }
 
+
 def load_dataloaders(data_dir, batch_size, num_workers):
     """Creates data loaders for training and validation datasets."""
     data_transforms = prepare_data_transforms()
@@ -86,6 +89,7 @@ def load_dataloaders(data_dir, batch_size, num_workers):
     return {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size,
                                            shuffle=True, num_workers=num_workers)
             for x in ['train', 'val']}, image_datasets['train'].classes
+
 
 def setup_model(args, num_classes, finetune=False):
     """
@@ -104,8 +108,12 @@ def setup_model(args, num_classes, finetune=False):
     model.fc = nn.Linear(model.fc.in_features, num_classes)
     optimizer = optim.SGD(filter(lambda p: p.requires_grad, model.parameters()),
                           lr=args.config.learning_rate, momentum=args.config.momentum)
-    scheduler = lr_scheduler.StepLR(optimizer, step_size=args.step_size, gamma=args.config.learning_rate_gamma)
+    scheduler = lr_scheduler.StepLR(
+        optimizer,
+        step_size=args.step_size,
+        gamma=args.config.learning_rate_gamma)
     return model, optimizer, scheduler
+
 
 def setup_tensorboard_logging(log_to_tensorboard):
     """Sets up TensorBoard logging if enabled."""
@@ -114,7 +122,9 @@ def setup_tensorboard_logging(log_to_tensorboard):
         return SummaryWriter()
     return None
 
-def train_model(args, model, dataloaders, optimizer, scheduler, device, writer=None):
+
+def train_model(args, model, dataloaders, optimizer,
+                scheduler, device, writer=None):
     """
     Trains the model for a set number of epochs as specified in args.config.
     Parameters:
@@ -128,14 +138,24 @@ def train_model(args, model, dataloaders, optimizer, scheduler, device, writer=N
     """
     criterion = nn.CrossEntropyLoss()
     for epoch in range(1, args.config.epochs + 1):
-        train_single_epoch(args, model, dataloaders['train'], optimizer, criterion, device, epoch, writer=writer)
+        train_single_epoch(
+            args,
+            model,
+            dataloaders['train'],
+            optimizer,
+            criterion,
+            device,
+            epoch,
+            writer=writer)
         scheduler.step()
         if writer:
             writer.flush()
     if writer:
         writer.close()
 
-def visualize_model_predictions(model, data_loader, class_names, device, num_images=8):
+
+def visualize_model_predictions(
+        model, data_loader, class_names, device, num_images=8):
     """
     Visualizes model predictions on images from a data loader in a single figure window.
 
@@ -167,11 +187,12 @@ def visualize_model_predictions(model, data_loader, class_names, device, num_ima
                 images_so_far += 1
                 ax = plt.subplot(num_images // 2, 2, images_so_far)
                 ax.axis('off')
-                ax.set_title(f'Predicted: {class_names[preds[j].item()]}, Actual: {class_names[labels[j].item()]}')
+                ax.set_title(
+                    f'Predicted: {class_names[preds[j].item()]}, Actual: {class_names[labels[j].item()]}')
 
                 display_image(inputs.cpu().data[j],
-                    mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.225],
-                    skip_show=True)
+                              mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225],
+                              skip_show=True)
 
                 if images_so_far == num_images:
                     model.train(mode=was_training)
@@ -184,6 +205,7 @@ def visualize_model_predictions(model, data_loader, class_names, device, num_ima
     if previous_ion:
         plt.ion()
     model.train(mode=was_training)
+
 
 def verify_data(args, data_url):
     """
@@ -198,7 +220,9 @@ def verify_data(args, data_url):
     """
     # Construct paths for the data directory and zip file
     data_dir = os.path.join(args.default_data_path, args.default_dataset)
-    data_zip_path = os.path.join(args.default_data_path, f"{args.default_dataset}.zip")
+    data_zip_path = os.path.join(
+        args.default_data_path, f"{
+            args.default_dataset}.zip")
 
     # Check if data directory already exists
     if not os.path.exists(data_dir):
@@ -207,16 +231,17 @@ def verify_data(args, data_url):
             print(f"Downloading dataset from {data_url}...")
             urllib.request.urlretrieve(data_url, data_zip_path)
             print("Download complete.")
-        
+
         # Extract the dataset to the specified data directory
         print(f"Extracting dataset to {data_dir}...")
         with zipfile.ZipFile(data_zip_path, 'r') as zip_ref:
             zip_ref.extractall(args.default_data_path)
-        
+
         # Remove the zip file after extraction to save space
         os.remove(data_zip_path)
-    
+
     return True
+
 
 def main():
 
@@ -225,34 +250,54 @@ def main():
     device = select_default_device(args)
 
     data_dir = os.path.join(args.default_data_path, args.default_dataset)
-    if( not verify_data(args, DEFAULT_DATA_URL) ):
+    if (not verify_data(args, DEFAULT_DATA_URL)):
         return
-    dataloaders, class_names = load_dataloaders(data_dir, args.config.batch_size, args.num_workers)
-    
+    dataloaders, class_names = load_dataloaders(
+        data_dir, args.config.batch_size, args.num_workers)
+
     print("Visualizing some sample data:")
     # Get a batch of training data
     inputs, classes = next(iter(dataloaders['val']))
     images = torchvision.utils.make_grid(inputs)
-    display_image(images, title=[class_names[x] for x in classes], 
-        mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.225] )
+    display_image(images, title=[class_names[x] for x in classes],
+                  mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
     writer = setup_tensorboard_logging(args.config.log_to_tensorboard)
 
     # Finetuning the ConvNet
     print("The model is used as a whole")
-    model, optimizer, scheduler = setup_model(args, num_classes=len(class_names), finetune=False)
+    model, optimizer, scheduler = setup_model(
+        args, num_classes=len(class_names), finetune=False)
     model = model.to(device)
     train_model(args, model, dataloaders, optimizer, scheduler, device, writer)
-    visualize_model_predictions(model, dataloaders['val'], class_names, device, num_images=8)
+    visualize_model_predictions(
+        model,
+        dataloaders['val'],
+        class_names,
+        device,
+        num_images=8)
 
     # Fixed feature extractor
     print("The model is being fine tuned; only the last layer is trained")
-    model_conv, optimizer_conv, exp_lr_scheduler = setup_model(args, num_classes=len(class_names), finetune=True)
+    model_conv, optimizer_conv, exp_lr_scheduler = setup_model(
+        args, num_classes=len(class_names), finetune=True)
     model_conv = model_conv.to(device)
-    train_model(args, model_conv, dataloaders, optimizer_conv, exp_lr_scheduler, device, writer)
+    train_model(
+        args,
+        model_conv,
+        dataloaders,
+        optimizer_conv,
+        exp_lr_scheduler,
+        device,
+        writer)
 
     # Visualization
-    visualize_model_predictions(model_conv, dataloaders['val'], class_names, device, num_images=8)
+    visualize_model_predictions(
+        model_conv,
+        dataloaders['val'],
+        class_names,
+        device,
+        num_images=8)
 
 
 if __name__ == '__main__':

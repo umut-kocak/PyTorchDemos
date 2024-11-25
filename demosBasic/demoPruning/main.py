@@ -16,7 +16,7 @@ from common.utils.arg_parser import get_args as get_common_args
 def get_args():
     """
     Parses command-line arguments including model configuration details.
-    
+
     Returns:
         Namespace: Parsed arguments including configuration settings.
     """
@@ -25,18 +25,19 @@ def get_args():
     args.config = config
     return args
 
+
 def apply_pruning(model):
     """
     Applies various pruning techniques to the LeNet model's conv1 layer.
-    
+
     Args:
         model (torch.nn.Module): The model to be pruned.
     """
     module = model.conv1
-    
+
     logging.info("Before pruning conv1 layer:")
     logging.info(list(module.named_parameters()))
-    
+
     # Apply random unstructured pruning
     prune.random_unstructured(module, name="weight", amount=0.3)
     logging.info("After random unstructured pruning on conv1 weights:")
@@ -53,16 +54,17 @@ def apply_pruning(model):
     prune.ln_structured(module, name="weight", amount=0.5, n=2, dim=0)
     logging.info("After structured pruning on conv1 weights (50% channels):")
     logging.info(list(module.named_parameters()))
-    
+
     # Remove pruning to make it permanent
     prune.remove(module, 'weight')
     logging.info("After making pruning permanent on conv1 weights:")
     logging.info(list(module.named_parameters()))
 
+
 def apply_global_pruning(model, sparsity=0.3):
     """
     Applies global pruning across multiple layers of the model.
-    
+
     Args:
         model (torch.nn.Module): The model to be globally pruned.
         sparsity (float): Percentage of total connections to prune.
@@ -80,21 +82,37 @@ def apply_global_pruning(model, sparsity=0.3):
         amount=sparsity,
     )
     sparsity_percentage = calculate_global_sparsity(model)
-    logging.info(f"After global pruning with {sparsity*100}% sparsity: {sparsity_percentage:.2f}%")
+    logging.info(
+        f"After global pruning with {sparsity * 100}% sparsity: {sparsity_percentage:.2f}%")
+
 
 def calculate_global_sparsity(model):
     """
     Calculates the global sparsity of the model after pruning.
-    
+
     Args:
         model (torch.nn.Module): The pruned model.
-        
+
     Returns:
         float: Global sparsity as a percentage.
     """
-    total_zero = sum(torch.sum(layer.weight == 0) for layer in [model.conv1, model.conv2, model.fc1, model.fc2, model.fc3])
-    total_elements = sum(layer.weight.nelement() for layer in [model.conv1, model.conv2, model.fc1, model.fc2, model.fc3])
+    total_zero = sum(
+        torch.sum(
+            layer.weight == 0) for layer in [
+            model.conv1,
+            model.conv2,
+            model.fc1,
+            model.fc2,
+            model.fc3])
+    total_elements = sum(
+        layer.weight.nelement() for layer in [
+            model.conv1,
+            model.conv2,
+            model.fc1,
+            model.fc2,
+            model.fc3])
     return 100.0 * float(total_zero) / total_elements
+
 
 class CustomPruningMethod(prune.BasePruningMethod):
     """Custom pruning method to prune every other entry in a tensor."""
@@ -105,15 +123,17 @@ class CustomPruningMethod(prune.BasePruningMethod):
         mask.view(-1)[::2] = 0
         return mask
 
+
 def custom_unstructured(module, name):
     """
     Applies a custom unstructured pruning to remove every other entry in the tensor.
-    
+
     Args:
         module (torch.nn.Module): Module containing the tensor to prune.
         name (str): Parameter name within the module to be pruned.
     """
     CustomPruningMethod.apply(module, name)
+
 
 def main():
     """
@@ -123,13 +143,13 @@ def main():
     logging.basicConfig(level=logging.INFO)
     args = get_args()
     torch.manual_seed(args.seed)
-    
+
     device = helper.select_default_device(args)
     model = LeNet(5).to(device=device)
-    
+
     # Prune specific layers
     apply_pruning(model)
-    
+
     # Apply global pruning across model
     apply_global_pruning(LeNet(5))
 

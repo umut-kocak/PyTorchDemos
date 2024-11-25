@@ -17,6 +17,7 @@ class M(torch.nn.Module):
     A sample model with layers that can be statically quantized.
     Includes QuantStub and DeQuantStub to handle conversions.
     """
+
     def __init__(self):
         super().__init__()
         # QuantStub converts tensors from floating point to quantized
@@ -35,6 +36,7 @@ class M(torch.nn.Module):
         x = self.dequant(x)
         return x
 
+
 def get_args():
     """
     Retrieves and parses command-line arguments.
@@ -44,6 +46,7 @@ def get_args():
     """
     parser, _ = get_common_args()
     return parser.parse_args()
+
 
 def print_size_of_model(model: nn.Module, label: str = "") -> int:
     """
@@ -63,7 +66,9 @@ def print_size_of_model(model: nn.Module, label: str = "") -> int:
     temp_path.unlink()
     return size
 
-def compare_latency(model: nn.Module, input_data: torch.Tensor, label: str = "") -> float:
+
+def compare_latency(model: nn.Module, input_data: torch.Tensor,
+                    label: str = "") -> float:
     """
     Evaluates and prints the latency of the model.
 
@@ -80,6 +85,7 @@ def compare_latency(model: nn.Module, input_data: torch.Tensor, label: str = "")
     print(f"Time: {latency:.6f} seconds")
     return latency
 
+
 def compare_accuracy(fp32_out: torch.Tensor, int8_out: torch.Tensor) -> None:
     """
     Compares the mean absolute values and difference between FP32 and INT8 model outputs.
@@ -94,7 +100,14 @@ def compare_accuracy(fp32_out: torch.Tensor, int8_out: torch.Tensor) -> None:
 
     print(f"Mean absolute value of FP32 model output: {mag_fp32:.5f}")
     print(f"Mean absolute value of INT8 model output: {mag_int8:.5f}")
-    print(f"Difference mean absolute value: {diff:.5f} ({(diff / mag_fp32 * 100):.2f}% difference)")
+    print(
+        f"Difference mean absolute value: {
+            diff:.5f} ({
+            (
+                diff /
+                mag_fp32 *
+                100):.2f}% difference)")
+
 
 def main():
     """
@@ -111,7 +124,8 @@ def main():
 
     # Set quantization configuration and fuse modules
     model_fp32.qconfig = torch.ao.quantization.get_default_qconfig('x86')
-    model_fp32_fused = torch.ao.quantization.fuse_modules(model_fp32, [['conv', 'relu']])
+    model_fp32_fused = torch.ao.quantization.fuse_modules(
+        model_fp32, [['conv', 'relu']])
 
     # Prepare model for calibration
     model_fp32_prepared = torch.ao.quantization.prepare(model_fp32_fused)
@@ -132,7 +146,10 @@ def main():
     # Model size comparison
     fp32_size = print_size_of_model(model_fp32, "FP32")
     int8_size = print_size_of_model(model_int8, "INT8")
-    print(f"Quantized model is {fp32_size / int8_size:.2f} times smaller than FP32 model.")
+    print(
+        f"Quantized model is {
+            fp32_size /
+            int8_size:.2f} times smaller than FP32 model.")
 
     # Latency comparison
     compare_latency(model_fp32, input_fp32, "FP32")
@@ -142,6 +159,7 @@ def main():
     output_fp32 = model_fp32(input_fp32)
     output_int8 = model_int8(input_fp32)
     compare_accuracy(output_fp32, output_int8)
+
 
 if __name__ == '__main__':
     main()

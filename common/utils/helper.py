@@ -7,7 +7,7 @@ import torch
 def log_to_tensorboard(writer, tag, value, step):
     """
     Log metrics to TensorBoard if a writer is provided.
-    
+
     Args:
         writer (torch.utils.tensorboard.SummaryWriter or None): TensorBoard writer object.
         tag (str): The tag for the metric.
@@ -17,12 +17,13 @@ def log_to_tensorboard(writer, tag, value, step):
     if writer is not None:
         writer.add_scalar(tag, value, step)
 
+
 def select_default_device(args) -> torch.device:
     """
     Selects and sets the computation device based on availability and config settings.
 
     Args:
-        args: args object with `default_device` attribute specifying the desired device 
+        args: args object with `default_device` attribute specifying the desired device
                 (options: "cuda", "mps", "cpu").
 
     Returns:
@@ -38,12 +39,15 @@ def select_default_device(args) -> torch.device:
     elif args.default_device == "cpu":
         device = torch.device("cpu")
     else:
-        raise ValueError(f"Unsupported device '{args.default_device}' or device not available.")
+        raise ValueError(
+            f"Unsupported device '{
+                args.default_device}' or device not available.")
     return device
 
 
 # Timing utilities
 start_time = None
+
 
 def start_timer(clear_cache: bool = True):
     """
@@ -62,9 +66,10 @@ def start_timer(clear_cache: bool = True):
             torch.cuda.synchronize()
     start_time = time.time()
 
+
 def end_timer_and_print(local_msg: str):
     """
-    Ends the timer, synchronizes CUDA (if available), and prints elapsed time 
+    Ends the timer, synchronizes CUDA (if available), and prints elapsed time
     and peak memory usage.
 
     Args:
@@ -76,7 +81,10 @@ def end_timer_and_print(local_msg: str):
     print("\n" + local_msg)
     print("Total execution time = {:.3f} sec".format(end_time - start_time))
     if torch.cuda.is_available():
-        print("Max memory used by tensors = {} bytes".format(torch.cuda.max_memory_allocated()))
+        print(
+            "Max memory used by tensors = {} bytes".format(
+                torch.cuda.max_memory_allocated()))
+
 
 def timed_function_call(fn, no_cuda: bool = False):
     """
@@ -97,7 +105,7 @@ def timed_function_call(fn, no_cuda: bool = False):
         start = time.time()
 
     result = fn()
-    
+
     if (not no_cuda) and torch.cuda.is_available():
         end.record()
         torch.cuda.synchronize()
@@ -107,6 +115,7 @@ def timed_function_call(fn, no_cuda: bool = False):
         duration = (end - start) * 1000  # Convert seconds to milliseconds
 
     return result, duration
+
 
 def get_memory_usage() -> int:
     """

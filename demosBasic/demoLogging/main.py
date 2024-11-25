@@ -11,7 +11,7 @@ def check_device_compatibility():
     """
     Checks if the CUDA device supports `torch.compile`. This function currently requires
     a CUDA device with compute capability >= 7.0.
-    
+
     Returns:
         bool: True if the device is compatible; otherwise, False.
     """
@@ -20,24 +20,26 @@ def check_device_compatibility():
     print("Skipping because torch.compile is not supported on this device.")
     return False
 
+
 def separator(name):
     """
     Prints a visual separator for each section in the output and resets the dynamo state.
-    
+
     Args:
         name (str): A label for the separator.
     """
     print(f"==================={name}=========================")
     torch._dynamo.reset()
 
+
 def main():
     """
     Main function to compile and analyze a simple function using `torch.compile`.
-    
+
     This script performs the following:
     1. Checks if the CUDA device is compatible.
     2. Defines a compiled function `fn` to be executed on the device.
-    3. Runs `fn` multiple times with different logging configurations (tracing, graph, 
+    3. Runs `fn` multiple times with different logging configurations (tracing, graph,
        fusion decisions, and output code) to understand the output of `torch.compile`.
     """
     # Check if CUDA device supports `torch.compile`
@@ -49,11 +51,11 @@ def main():
     def fn(x, y):
         """
         Adds two tensors and returns the result incremented by 2.
-        
+
         Args:
             x (torch.Tensor): First input tensor.
             y (torch.Tensor): Second input tensor.
-        
+
         Returns:
             torch.Tensor: Resulting tensor after the computation.
         """
@@ -62,7 +64,10 @@ def main():
 
     # Prepare input tensors
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    inputs = (torch.ones(2, 2, device=device), torch.zeros(2, 2, device=device))
+    inputs = (
+        torch.ones(
+            2, 2, device=device), torch.zeros(
+            2, 2, device=device))
 
     # Set logging configurations for different stages of compilation and output
     separator("Dynamo Tracing")
@@ -91,7 +96,12 @@ def main():
 
     # Reset logging level to its original state (optional)
     separator("Reset Logging")
-    torch._logging.set_logs(dynamo=False, graph=False, fusion=False, output_code=False)
+    torch._logging.set_logs(
+        dynamo=False,
+        graph=False,
+        fusion=False,
+        output_code=False)
+
 
 if __name__ == '__main__':
     main()

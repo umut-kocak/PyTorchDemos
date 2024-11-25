@@ -23,6 +23,7 @@ def get_args():
                         help='Output filename prefix for profiling trace results')
     return parser.parse_args()
 
+
 def profile_on_cpu(model, inputs):
     """
     Profiles the given model on the CPU for both inference time and memory usage.
@@ -36,13 +37,20 @@ def profile_on_cpu(model, inputs):
     with profile(activities=[ProfilerActivity.CPU], record_shapes=True) as prof:
         with record_function("model_inference_cpu"):
             model(inputs)
-    logging.info(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
-    
+    logging.info(
+        prof.key_averages().table(
+            sort_by="cpu_time_total",
+            row_limit=10))
+
     # Profile memory usage
     with profile(activities=[ProfilerActivity.CPU], profile_memory=True, record_shapes=True) as prof:
         with record_function("model_inference_cpu"):
             model(inputs)
-    logging.info(prof.key_averages().table(sort_by="cpu_memory_usage", row_limit=10))
+    logging.info(
+        prof.key_averages().table(
+            sort_by="cpu_memory_usage",
+            row_limit=10))
+
 
 def profile_on_gpu(model, inputs):
     """
@@ -56,8 +64,12 @@ def profile_on_gpu(model, inputs):
     with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA], record_shapes=True) as prof:
         with record_function("model_inference_gpu"):
             model(inputs)
-    logging.info(prof.key_averages().table(sort_by="cuda_time_total", row_limit=10))
+    logging.info(
+        prof.key_averages().table(
+            sort_by="cuda_time_total",
+            row_limit=10))
     torch.cuda.empty_cache()  # Clear GPU cache to release memory after profiling
+
 
 def trace_long_running_tasks(model, inputs, filename_prefix):
     """
@@ -77,12 +89,14 @@ def trace_long_running_tasks(model, inputs, filename_prefix):
 
     with profile(
         activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
-        schedule=torch.profiler.schedule(skip_first=2, wait=1, warmup=1, active=2),
+        schedule=torch.profiler.schedule(
+            skip_first=2, wait=1, warmup=1, active=2),
         on_trace_ready=trace_handler
     ) as p:
         for idx in range(10):
             model(inputs)
             p.step()  # Step through the schedule
+
 
 def main():
     """
@@ -92,7 +106,7 @@ def main():
     logging.basicConfig(level=logging.INFO)
     args = get_args()
     torch.manual_seed(args.seed)
-    
+
     # Prepare model and inputs
     model = models.resnet18()
     input_shape = (5, 3, 224, 224)  # Sample input batch
@@ -111,6 +125,7 @@ def main():
 
     # Long-running task tracing
     trace_long_running_tasks(model, inputs, args.profiler_output_file_name)
+
 
 if __name__ == '__main__':
     main()

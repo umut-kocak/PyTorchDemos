@@ -1,5 +1,5 @@
 """
-This script demonstrates the creation and dynamic quantization of an LSTM model, 
+This script demonstrates the creation and dynamic quantization of an LSTM model,
 and compares floating-point and quantized versions in terms of size, latency, and accuracy.
 """
 import os
@@ -14,6 +14,7 @@ from common.utils.arg_parser import get_args as get_common_args
 # Constants
 TEMP_FILE_PATH = "temp.p"
 
+
 class LSTMForDemonstration(nn.Module):
     """
     A simple LSTM model for demonstration purposes, wrapping around `nn.LSTM`.
@@ -23,6 +24,7 @@ class LSTMForDemonstration(nn.Module):
         out_dim (int): Output dimension for the LSTM.
         depth (int): Number of LSTM layers.
     """
+
     def __init__(self, in_dim, out_dim, depth):
         super(LSTMForDemonstration, self).__init__()
         self.lstm = nn.LSTM(in_dim, out_dim, depth)
@@ -40,6 +42,7 @@ class LSTMForDemonstration(nn.Module):
         """
         out, hidden = self.lstm(inputs, hidden)
         return out, hidden
+
 
 def get_args():
     """
@@ -61,6 +64,7 @@ def get_args():
     args.config = config
     return args
 
+
 def initialize_hidden_state(num_layers, batch_size, model_dim):
     """
     Initializes the hidden and cell states for the LSTM model.
@@ -77,6 +81,7 @@ def initialize_hidden_state(num_layers, batch_size, model_dim):
         torch.randn(num_layers, batch_size, model_dim),
         torch.randn(num_layers, batch_size, model_dim)
     )
+
 
 def print_size_of_model(model, label=""):
     """
@@ -95,6 +100,7 @@ def print_size_of_model(model, label=""):
     os.remove(TEMP_FILE_PATH)
     return size
 
+
 def compare_latency(model, inputs, hidden, label=""):
     """
     Measures and prints the latency of a model.
@@ -107,6 +113,7 @@ def compare_latency(model, inputs, hidden, label=""):
     """
     latency = timeit.timeit(lambda: model(inputs, hidden), number=1)
     print(f"{label} Latency: {latency:.4f} seconds")
+
 
 def compare_accuracy(float_model, quantized_model, inputs, hidden):
     """
@@ -132,6 +139,7 @@ def compare_accuracy(float_model, quantized_model, inputs, hidden):
         print(f"Mean absolute difference: {mean_diff:.5f} "
               f"({mean_diff / mean_fp * 100:.2f}%)")
 
+
 def main():
     """
     Main function to set up the LSTM model, quantize it, and compare
@@ -144,11 +152,20 @@ def main():
     torch.set_default_device(device)
 
     # Generate random input and hidden state
-    inputs = torch.randn(args.sequence_length, args.config.batch_size, args.model_dimension)
-    hidden = initialize_hidden_state(args.number_of_layers, args.config.batch_size, args.model_dimension)
+    inputs = torch.randn(
+        args.sequence_length,
+        args.config.batch_size,
+        args.model_dimension)
+    hidden = initialize_hidden_state(
+        args.number_of_layers,
+        args.config.batch_size,
+        args.model_dimension)
 
     # Create the floating-point LSTM model
-    float_lstm = LSTMForDemonstration(args.model_dimension, args.model_dimension, args.number_of_layers)
+    float_lstm = LSTMForDemonstration(
+        args.model_dimension,
+        args.model_dimension,
+        args.number_of_layers)
 
     # Perform dynamic quantization
     try:
@@ -176,6 +193,7 @@ def main():
 
     # Compare accuracy
     compare_accuracy(float_lstm, quantized_lstm, inputs, hidden)
+
 
 if __name__ == '__main__':
     main()

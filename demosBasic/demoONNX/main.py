@@ -21,12 +21,13 @@ DEFAULT_MODEL_URL = "https://s3.amazonaws.com/pytorch/test_data/export/superres_
 DEFAULT_IMAGE_FILE = "dog1.jpg"
 DEFAULT_OUTPUT_MODEL_FILE = "super_resolution.onnx"
 
+
 def get_args():
     """
     Parses command-line arguments and returns the configuration and arguments.
 
     Returns:
-        args (Namespace): Parsed arguments, including configurations for the model URL, 
+        args (Namespace): Parsed arguments, including configurations for the model URL,
                           output model filename, and test image filename.
     """
     parser, config = get_common_args(True)
@@ -42,6 +43,7 @@ def get_args():
     args.config = config
     return args
 
+
 def load_model(model_url, upscale_factor=3):
     """
     Loads the SuperResolution model with pretrained weights.
@@ -55,9 +57,13 @@ def load_model(model_url, upscale_factor=3):
     """
     model = SuperResolutionNet(upscale_factor=upscale_factor)
     map_location = 'cuda' if torch.cuda.is_available() else 'cpu'
-    model.load_state_dict(model_zoo.load_url(model_url, map_location=map_location))
+    model.load_state_dict(
+        model_zoo.load_url(
+            model_url,
+            map_location=map_location))
     model.eval()
     return model
+
 
 def export_to_onnx(model, output_file, input_shape, batch_size):
     """
@@ -79,6 +85,7 @@ def export_to_onnx(model, output_file, input_shape, batch_size):
     onnx.checker.check_model(onnx_model)
     logging.info("Model exported successfully to ONNX format.")
 
+
 def to_numpy(tensor):
     """
     Converts a tensor to a NumPy array.
@@ -90,6 +97,7 @@ def to_numpy(tensor):
         np.ndarray: Converted NumPy array.
     """
     return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
+
 
 def test_inference(model, ort_session, x):
     """
@@ -104,7 +112,10 @@ def test_inference(model, ort_session, x):
     start_time = time.time()
     torch_out = model(x)
     end_time = time.time()
-    logging.info(f"PyTorch inference time: {end_time - start_time:.4f} seconds")
+    logging.info(
+        f"PyTorch inference time: {
+            end_time -
+            start_time:.4f} seconds")
 
     # ONNX inference timing
     ort_inputs = {ort_session.get_inputs()[0].name: to_numpy(x)}
@@ -114,8 +125,13 @@ def test_inference(model, ort_session, x):
     logging.info(f"ONNX inference time: {end_time - start_time:.4f} seconds")
 
     # Result comparison
-    np.testing.assert_allclose(to_numpy(torch_out), ort_outs[0], rtol=1e-03, atol=1e-05)
+    np.testing.assert_allclose(
+        to_numpy(torch_out),
+        ort_outs[0],
+        rtol=1e-03,
+        atol=1e-05)
     logging.info("ONNX and PyTorch results are consistent.")
+
 
 def save_super_resolved_image(ort_session, img_y, cb, cr, output_filename):
     """
@@ -133,7 +149,13 @@ def save_super_resolved_image(ort_session, img_y, cb, cr, output_filename):
     """
     ort_inputs = {ort_session.get_inputs()[0].name: to_numpy(img_y)}
     img_out_y = ort_session.run(None, ort_inputs)[0]
-    img_out_y = Image.fromarray(np.uint8((img_out_y[0] * 255.0).clip(0, 255)[0]), mode='L')
+    img_out_y = Image.fromarray(
+        np.uint8(
+            (img_out_y[0] *
+             255.0).clip(
+                0,
+                255)[0]),
+        mode='L')
 
     final_img = Image.merge(
         "YCbCr", [
@@ -141,14 +163,15 @@ def save_super_resolved_image(ort_session, img_y, cb, cr, output_filename):
             cb.resize(img_out_y.size, Image.BICUBIC),
             cr.resize(img_out_y.size, Image.BICUBIC)
         ]).convert("RGB")
-    
+
     final_img.save(output_filename)
     logging.info(f"Super-resolved image saved as {output_filename}.")
     return img_out_y.size
 
+
 def main():
     """
-    Main function that loads the model, exports it to ONNX, runs inference tests, 
+    Main function that loads the model, exports it to ONNX, runs inference tests,
     and saves a super-resolved image using the ONNX runtime.
     """
     logging.basicConfig(level=logging.INFO)
@@ -158,10 +181,16 @@ def main():
     # Load and prepare model
     model = load_model(args.model_url)
     input_shape = (1, 224, 224)  # Single channel, 224x224 image
-    export_to_onnx(model, args.output_model_file_name, input_shape, args.config.batch_size)
+    export_to_onnx(
+        model,
+        args.output_model_file_name,
+        input_shape,
+        args.config.batch_size)
 
     # Create ONNX runtime session
-    ort_session = onnxruntime.InferenceSession(args.output_model_file_name, providers=["CPUExecutionProvider"])
+    ort_session = onnxruntime.InferenceSession(
+        args.output_model_file_name,
+        providers=["CPUExecutionProvider"])
     x = torch.randn(args.config.batch_size, *input_shape, requires_grad=True)
     test_inference(model, ort_session, x)
 
@@ -173,13 +202,15 @@ def main():
     img_y = transforms.ToTensor()(img_y).unsqueeze(0)
 
     # Save super-resolved image
-    out_size = save_super_resolved_image(ort_session, img_y, img_cb, img_cr, f"./superres_{args.test_image_file_name}")
-    
+    out_size = save_super_resolved_image(
+        ort_session, img_y, img_cb, img_cr, f"./superres_{args.test_image_file_name}")
+
     # Save resized original image (without super-resolution)
     resized_img = transforms.Resize([out_size[0], out_size[1]])(img)
-    output_filename = f"./resized_{args.test_image_file_name}" 
+    output_filename = f"./resized_{args.test_image_file_name}"
     resized_img.save(output_filename)
     logging.info(f"Resized image saved as {output_filename}.")
-    
+
+
 if __name__ == '__main__':
     main()

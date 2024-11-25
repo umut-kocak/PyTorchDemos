@@ -16,6 +16,7 @@ from common.utils.train import train_and_evaluate
 
 OVERRIDE_MOMENTUM = 0.9
 
+
 def get_args():
     """
     Parses command-line arguments for model and training configurations.
@@ -60,8 +61,16 @@ def setup_data_loaders(args) -> Tuple[DataLoader, DataLoader]:
     ])
 
     # Initialize datasets and data loaders
-    trainset = torchvision.datasets.CIFAR10(root=args.default_data_path, train=True, download=True, transform=transform)
-    testset = torchvision.datasets.CIFAR10(root=args.default_data_path, train=False, download=True, transform=transform)
+    trainset = torchvision.datasets.CIFAR10(
+        root=args.default_data_path,
+        train=True,
+        download=True,
+        transform=transform)
+    testset = torchvision.datasets.CIFAR10(
+        root=args.default_data_path,
+        train=False,
+        download=True,
+        transform=transform)
     train_loader = DataLoader(trainset, **train_kwargs)
     test_loader = DataLoader(testset, **test_kwargs)
 
@@ -79,8 +88,13 @@ def initialize_model(args) -> torch.nn.Module:
         torch.nn.Module: The initialized model on the correct device.
     """
     device = select_default_device(args)
-    model = ClassificationNet(input_channels=3, input_size=(32, 32), hidden_conv_dims=[6,16], hidden_fc_dims=[120, 84], num_classes=10).to(device).to(device)
+    model = ClassificationNet(
+        input_channels=3, input_size=(
+            32, 32), hidden_conv_dims=[
+            6, 16], hidden_fc_dims=[
+                120, 84], num_classes=10).to(device).to(device)
     return model
+
 
 def predict_sample(model, device, test_loader, classes):
     """
@@ -95,13 +109,15 @@ def predict_sample(model, device, test_loader, classes):
     # Fetch a batch of test images and labels
     data_iter = iter(test_loader)
     images, labels = next(data_iter)
-    print('Actual Labels: ', ' '.join(f'{classes[labels[j]]:5s}' for j in range(4)))
+    print('Actual Labels: ', ' '.join(
+        f'{classes[labels[j]]:5s}' for j in range(4)))
 
     # Forward pass through the model
     images, labels = images.to(device), labels.to(device)  # Move to device
     outputs = model(images)
     _, predicted = torch.max(outputs, 1)
-    print('Predicted: ', ' '.join(f'{classes[predicted[j]]:5s}' for j in range(4)))
+    print('Predicted: ', ' '.join(
+        f'{classes[predicted[j]]:5s}' for j in range(4)))
 
     # Run single prediction for one image
     model.eval()
@@ -125,16 +141,35 @@ def main():
     train_loader, test_loader = setup_data_loaders(args)
     model = initialize_model(args)
 
-    optimizer = torch.optim.SGD(model.parameters(), lr=args.config.learning_rate, momentum=args.config.momentum)
+    optimizer = torch.optim.SGD(
+        model.parameters(),
+        lr=args.config.learning_rate,
+        momentum=args.config.momentum)
     criterion = torch.nn.CrossEntropyLoss()
-    train_and_evaluate(args, model, train_loader, test_loader, optimizer, criterion)
+    train_and_evaluate(
+        args,
+        model,
+        train_loader,
+        test_loader,
+        optimizer,
+        criterion)
 
     # Save model if specified
     if args.save_model:
         torch.save(model.state_dict(), "object_classification.pt")
 
     # Class labels for CIFAR-10
-    classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+    classes = (
+        'plane',
+        'car',
+        'bird',
+        'cat',
+        'deer',
+        'dog',
+        'frog',
+        'horse',
+        'ship',
+        'truck')
 
     # Run a sample prediction
     predict_sample(model, device, test_loader, classes)

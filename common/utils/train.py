@@ -11,10 +11,10 @@ from common.utils.helper import log_to_tensorboard, select_default_device
 def device_to_str(device):
     """
     Convert a PyTorch device object to its string representation.
-    
+
     Args:
         device (torch.device): The PyTorch device object.
-        
+
     Returns:
         str: A string representing the device ('cuda', 'mps', or 'cpu').
     """
@@ -25,13 +25,14 @@ def device_to_str(device):
     else:
         return 'cpu'
 
+
 def test_model(
-    args, 
-    model, 
-    test_loader, 
-    loss_criterion, 
-    device, 
-    classification=False, 
+    args,
+    model,
+    test_loader,
+    loss_criterion,
+    device,
+    classification=False,
     writer=None
 ):
     """
@@ -62,21 +63,25 @@ def test_model(
             if classification:
                 test_loss += loss_criterion(output, target).item()
             else:
-                test_loss += loss_criterion(output, target, reduction='sum').item()
+                test_loss += loss_criterion(output,
+                                            target, reduction='sum').item()
 
             # Handle predictions and accuracy
             if classification:
                 # For classification tasks
                 total += target.size(0)
-                #_, predicted = torch.max(output.data, 1)
-                #correct += (predicted == target).sum().item()
-                correct += (output.argmax(1) == target).type(torch.float).sum().item()
+                # _, predicted = torch.max(output.data, 1)
+                # correct += (predicted == target).sum().item()
+                correct += (output.argmax(1) ==
+                            target).type(torch.float).sum().item()
             else:
                 # For non-classification tasks
-                pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+                # get the index of the max log-probability
+                pred = output.argmax(dim=1, keepdim=True)
                 correct += pred.eq(target.view_as(pred)).sum().item()
 
-            # Collect predictions and targets if needed (e.g., for debugging or extended metrics)
+            # Collect predictions and targets if needed (e.g., for debugging or
+            # extended metrics)
             all_predictions.append(output.cpu())
             all_targets.append(target.cpu())
 
@@ -88,15 +93,29 @@ def test_model(
     test_loss /= len(test_loader)
 
     # Print results
-    print(f"\nTest set: Average loss: {test_loss:.4f}, Accuracy: ({accuracy:.0f}%)\n")
+    print(
+        f"\nTest set: Average loss: {
+            test_loss:.4f}, Accuracy: ({
+            accuracy:.0f}%)\n")
 
     # Log to TensorBoard
-    log_to_tensorboard(writer, 'Loss/test', test_loss, args.config.epochs * len(test_loader))
-    log_to_tensorboard(writer, 'Accuracy/test', accuracy, args.config.epochs * len(test_loader))
+    log_to_tensorboard(
+        writer,
+        'Loss/test',
+        test_loss,
+        args.config.epochs *
+        len(test_loader))
+    log_to_tensorboard(
+        writer,
+        'Accuracy/test',
+        accuracy,
+        args.config.epochs *
+        len(test_loader))
 
     return test_loss, accuracy
 
-def train_single_epoch(args, model, data_source, optimizer, loss_criterion, device, epoch, 
+
+def train_single_epoch(args, model, data_source, optimizer, loss_criterion, device, epoch,
                        use_amp=False, scaler=None, writer=None, explicit_data=False):
     """
     Train the model for one epoch using either a DataLoader or explicit data.
@@ -142,46 +161,57 @@ def train_single_epoch(args, model, data_source, optimizer, loss_criterion, devi
         # Logging
         if batch_idx % args.config.log_interval == 0:
             print(
-                f"Train Epoch: {epoch} [{batch_idx * len(data)}/{total_batches * len(data)} "
+                f"Train Epoch: {epoch} [{
+                    batch_idx * len(data)}/{
+                    total_batches * len(data)} "
                 f"({100. * batch_idx / total_batches:.0f}%)]\tLoss: {loss.item():.6f}"
             )
-        log_to_tensorboard(writer, 'Loss/train', loss.item(), epoch * total_batches + batch_idx + 1)
+        log_to_tensorboard(
+            writer,
+            'Loss/train',
+            loss.item(),
+            epoch *
+            total_batches +
+            batch_idx +
+            1)
 
         if args.config.dry_run:
             break
 
 # Usage
 # with data_loader
-#train_single_epoch(
-#    args, 
-#    model, 
-#    data_source=train_loader, 
-#    optimizer=optimizer, 
-#    loss_criterion=loss_criterion, 
-#    device=device, 
-#    epoch=epoch, 
-#    use_amp=True, 
-#    scaler=scaler, 
-#    writer=writer, 
+# train_single_epoch(
+#    args,
+#    model,
+#    data_source=train_loader,
+#    optimizer=optimizer,
+#    loss_criterion=loss_criterion,
+#    device=device,
+#    epoch=epoch,
+#    use_amp=True,
+#    scaler=scaler,
+#    writer=writer,
 #    explicit_data=False
-#)
+# )
 #
 # with explicit data
-#train_single_epoch(
-#    args, 
-#    model, 
-#    data_source=(input_data, target_data), 
-#    optimizer=optimizer, 
-#    loss_criterion=loss_criterion, 
-#    device=device, 
-#    epoch=epoch, 
-#    use_amp=True, 
-#    scaler=scaler, 
-#    writer=writer, 
+# train_single_epoch(
+#    args,
+#    model,
+#    data_source=(input_data, target_data),
+#    optimizer=optimizer,
+#    loss_criterion=loss_criterion,
+#    device=device,
+#    epoch=epoch,
+#    use_amp=True,
+#    scaler=scaler,
+#    writer=writer,
 #    explicit_data=True
-#)
+# )
 
-def train_and_evaluate(args, model, train_loader: DataLoader, test_loader: DataLoader, optimizer, loss_criterion ):
+
+def train_and_evaluate(args, model, train_loader: DataLoader,
+                       test_loader: DataLoader, optimizer, loss_criterion):
     """
     Runs the training and evaluation loop for the specified number of epochs.
 
@@ -210,25 +240,38 @@ def train_and_evaluate(args, model, train_loader: DataLoader, test_loader: DataL
 
     try:
         for epoch in range(1, args.config.epochs + 1):
-            train_single_epoch(args, model, train_loader, optimizer, loss_criterion, device, epoch, writer=writer)
-            
+            train_single_epoch(
+                args,
+                model,
+                train_loader,
+                optimizer,
+                loss_criterion,
+                device,
+                epoch,
+                writer=writer)
+
             # Test the model and get loss and accuracy
-            test_loss, test_accuracy = test_model(args, model, test_loader, loss_criterion, device, True, writer)
-            
+            test_loss, test_accuracy = test_model(
+                args, model, test_loader, loss_criterion, device, True, writer)
+
             # Check if this is the best model so far
             if test_loss < best_test_loss:
                 best_test_loss = test_loss
                 # Save the model state_dict to the temporary file
                 torch.save(model.state_dict(), best_model_path)
-            
+
             # Flush TensorBoard writer
             if writer:
                 writer.flush()
 
         # Load the best model weights after training
         if best_model_path:
-            model.load_state_dict(torch.load(best_model_path, map_location=device, weights_only=True))
-        
+            model.load_state_dict(
+                torch.load(
+                    best_model_path,
+                    map_location=device,
+                    weights_only=True))
+
     finally:
         # Clean up: close the TensorBoard writer and delete the temporary file
         if writer:

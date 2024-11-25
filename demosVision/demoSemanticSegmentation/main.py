@@ -36,7 +36,8 @@ def get_args():
     return parser.parse_args()
 
 
-def load_images(image_paths: List[str], size : tuple=(400, 600)) -> List[torch.Tensor]:
+def load_images(image_paths: List[str], size: tuple = (
+        400, 600)) -> List[torch.Tensor]:
     """
     Loads and preprocesses images from specified paths.
 
@@ -51,7 +52,9 @@ def load_images(image_paths: List[str], size : tuple=(400, 600)) -> List[torch.T
     images = [v2.Resize(size=size)(orig_img) for orig_img in images]
     return images
 
-def generate_boolean_masks(output, categories: List[str], target_classes: List[str], proba_threshold: float = 0.5):
+
+def generate_boolean_masks(
+        output, categories: List[str], target_classes: List[str], proba_threshold: float = 0.5):
     """
     Generates boolean masks for specified classes from model output.
 
@@ -74,7 +77,8 @@ def generate_boolean_masks(output, categories: List[str], target_classes: List[s
     ]
 
 
-def draw_class_masks_on_images(images: List[torch.Tensor], boolean_masks: List[torch.Tensor], alpha: float = 0.6) -> List[torch.Tensor]:
+def draw_class_masks_on_images(
+        images: List[torch.Tensor], boolean_masks: List[torch.Tensor], alpha: float = 0.6) -> List[torch.Tensor]:
     """
     Draws segmentation masks on images.
 
@@ -131,7 +135,15 @@ def main():
     # Generate and display masks for all classes
     print("Displaying masks for all classes:")
     num_classes = output.shape[1]
-    all_class_masks = (output.argmax(dim=1) == torch.arange(num_classes)[:, None, None, None]).swapaxes(0, 1)
+    all_class_masks = (
+        output.argmax(
+            dim=1) == torch.arange(num_classes)[
+            :,
+            None,
+            None,
+            None]).swapaxes(
+                0,
+        1)
     masks_for_all_classes = draw_class_masks_on_images(images, all_class_masks)
     display_grid(masks_for_all_classes, title="Dominating mask")
 

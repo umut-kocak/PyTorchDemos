@@ -20,12 +20,13 @@ from common.utils.visualise import display_grid
 DEFAULT_IMAGE_FILE = "dog1.jpg"
 DEFAULT_IMAGE_FILE2 = "dog2.jpg"
 
+
 def get_args():
     """
     Parses command-line arguments and returns the configuration and arguments.
 
     Returns:
-        args (Namespace): Parsed arguments, including configurations for the model URL, 
+        args (Namespace): Parsed arguments, including configurations for the model URL,
                           output model filename, and test image filenames.
     """
     parser, _ = get_common_args()
@@ -35,7 +36,9 @@ def get_args():
                         help='Second image file to test the model with')
     return parser.parse_args()
 
-def load_and_transform_images(image_paths: List[str], transform, size : tuple=(400, 600)) -> List[torch.Tensor]:
+
+def load_and_transform_images(image_paths: List[str], transform, size: tuple = (
+        400, 600)) -> List[torch.Tensor]:
     """
     Loads and transforms images from the specified paths.
 
@@ -49,11 +52,13 @@ def load_and_transform_images(image_paths: List[str], transform, size : tuple=(4
     """
     images = [read_image(path) for path in image_paths]
     transformed_images = [transform(img) for img in images]
-    transformed_images = [v2.Resize(size=size)(orig_img) for orig_img in transformed_images]
+    transformed_images = [v2.Resize(size=size)(orig_img)
+                          for orig_img in transformed_images]
     return transformed_images
 
-def filter_and_draw_masks(images: List[torch.Tensor], model_outputs, 
-                          categories: List[str], score_threshold: float = 0.75, 
+
+def filter_and_draw_masks(images: List[torch.Tensor], model_outputs,
+                          categories: List[str], score_threshold: float = 0.75,
                           proba_threshold: float = 0.5) -> List[torch.Tensor]:
     """
     Filters and draws masks on images based on score and probability thresholds.
@@ -73,7 +78,7 @@ def filter_and_draw_masks(images: List[torch.Tensor], model_outputs,
         for out in model_outputs
     ]
     images_with_masks = [
-        draw_segmentation_masks(img, mask.squeeze(1)) 
+        draw_segmentation_masks(img, mask.squeeze(1))
         for img, mask in zip(images, bool_masks)
     ]
 
@@ -82,42 +87,45 @@ def filter_and_draw_masks(images: List[torch.Tensor], model_outputs,
         print(f"Detected instances for the {i}th image:")
         print([categories[label] for label in output['labels']])
         print("Scores:", [score.item() for score in output['scores']])
-    
+
     return images_with_masks
+
 
 def main():
     """
-    Main function that loads images, applies an instance segmentation model, 
+    Main function that loads images, applies an instance segmentation model,
     and displays the segmented images with masks.
     """
     args = get_args()
     torch.manual_seed(args.seed)
-    
+
     # Load image paths
     image_paths = [
         str(Path(args.default_assets_path) / args.input_image_file_name),
         str(Path(args.default_assets_path) / args.input_image_file_name2)
     ]
-    
+
     # Load model and transformations
     weights = MaskRCNN_ResNet50_FPN_Weights.DEFAULT
     transform = weights.transforms()
     model = maskrcnn_resnet50_fpn(weights=weights, progress=False).eval()
-    
+
     # Load and preprocess images
     images = load_and_transform_images(image_paths, transform)
     display_grid([make_grid(images)], title="Original Images")
-    
+
     # Get model outputs
     with torch.no_grad():
         model_outputs = model(images)
-    
+
     # Filter and draw masks based on thresholds
     categories = weights.meta["categories"]
-    images_with_masks = filter_and_draw_masks(images, model_outputs, categories)
-    
+    images_with_masks = filter_and_draw_masks(
+        images, model_outputs, categories)
+
     # Plot images with drawn masks
     display_grid(images_with_masks, title="Images with Masks")
+
 
 if __name__ == '__main__':
     main()
