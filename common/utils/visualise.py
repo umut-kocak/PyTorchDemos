@@ -138,11 +138,16 @@ def display_grid_adapter(images, *args, **kwargs):
     Adapter for display_grid to handle lists of PIL images.
 
     Args:
-        images (list of torch.Tensor or PIL.Image.Image): List of images to display.
+        images (list of torch.Tensor or list of list of torch.Tensor): 1D or 2D list of images.
         *args, **kwargs: Additional arguments to pass to display_grid.
     """
-    images = [convert_pil_to_tensor(img) if isinstance(
-        img, Image.Image) else img for img in images]
+    if isinstance(images[0], list):
+        for row_idx, row in enumerate(images):
+            images[row_idx] = [convert_pil_to_tensor(img) if isinstance(
+                img, Image.Image) else img for img in row]
+    else:
+        images = [convert_pil_to_tensor(img) if isinstance(
+            img, Image.Image) else img for img in images]
     display_grid(images, *args, **kwargs)
 
 
