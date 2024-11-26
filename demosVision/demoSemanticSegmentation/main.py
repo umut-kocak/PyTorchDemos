@@ -12,12 +12,12 @@ from torchvision.models.segmentation import FCN_ResNet50_Weights, fcn_resnet50
 from torchvision.transforms import v2
 from torchvision.utils import draw_segmentation_masks, make_grid
 
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
 from common.utils.visualise import display_grid
 
 # Default values as constants
 DEFAULT_IMAGE_FILE = "dog1.jpg"
-DEFAULT_IMAGE_FILE2 = "dog2.jpg"
+DEFAULT_IMAGE_FILE2 = "dogs.jpg"
 
 
 def get_args():
@@ -28,7 +28,7 @@ def get_args():
         Namespace: Parsed arguments, including configurations for the model URL,
                    output model filename, and test image filenames.
     """
-    parser, _ = get_common_args()
+    parser = get_common_args()
     parser.add_argument('--input-image-file-name', type=str, default=DEFAULT_IMAGE_FILE,
                         help='First image file to test the model with')
     parser.add_argument('--input-image-file-name2', type=str, default=DEFAULT_IMAGE_FILE2,
@@ -120,7 +120,7 @@ def main():
     batch = torch.stack([transform(img) for img in images])
     with torch.no_grad():
         output = model(batch)['out']
-
+    
     # Generate and visualize masks for specified classes
     target_classes = ['dog', 'boat']
     categories = weights.meta["categories"]

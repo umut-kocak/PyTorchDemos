@@ -13,7 +13,7 @@ from captum.attr import visualization as viz
 from PIL import Image
 from torchvision import models, transforms
 
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
 
 # Default values as constants
 DEFAULT_IMAGE_FILE = "cat_and_dog.jpg"
@@ -31,7 +31,7 @@ def get_args():
     Returns:
         argparse.Namespace: Parsed arguments with defaults or overridden values.
     """
-    parser, _ = get_common_args()
+    parser = get_common_args()
 
     parser.add_argument(
         '--input-image-file-name',

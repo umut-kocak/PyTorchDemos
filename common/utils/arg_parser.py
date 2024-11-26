@@ -1,72 +1,38 @@
 import argparse
-from typing import Optional, Tuple
 
-
-def get_args(
-        load_config: bool = False) -> Tuple[argparse.ArgumentParser, Optional['Config']]:
+def get_common_args() -> argparse.ArgumentParser:
     """
-    Creates an argument parser for the PyTorch Demo application and optionally loads
-    additional configuration parameters from a JSON file.
-
-    Args:
-        load_config (bool): If True, loads a configuration file specified by the
-                            `--config-path` argument.
+    Creates and returns an argument parser for the PyTorch Demo application.
 
     Returns:
-        Tuple[argparse.ArgumentParser, Optional[Config]]: A tuple containing the
-        ArgumentParser instance with pre-set arguments and an optional `Config` object
-        (if `load_config` is True). If `load_config` is False, returns `None` for the
-        configuration object.
+        argparse.ArgumentParser: An ArgumentParser instance with pre-defined arguments 
+        for configuring the PyTorch Demo.
 
     Command-Line Arguments:
         --config-path (str): Path to the configuration JSON file (default: 'DefaultConfig.json').
-        --verbose (bool): Enables verbose mode for additional output (default: False).
+        --verbose (bool): Enables verbose mode for additional output.
         --seed (int): Random seed for reproducibility (default: 42).
-        --save-model (bool): Flag to save the current model state (default: False).
+        --default-device (str): Device to use for computation (e.g., 'cuda', 'mps', 'cpu').
+        --default-data-path (str): Path to the default dataset directory (default: './data').
+        --default-assets-path (str): Path to the default assets directory for standalone data.
+        --save-model (bool): Flag to save the current model state.
     """
     parser = argparse.ArgumentParser(description="PyTorch Demo")
 
     # Common arguments
     parser.add_argument('--config-path', type=str, default='DefaultConfig.json',
-                        help='Path to the configuration JSON file')
-
+                        help='Path to the configuration JSON file(If used) (default: DefaultConfig.json)')
     parser.add_argument('--verbose', action='store_true', default=False,
-                        help='Enable verbose mode')
-
+                        help='Enable verbose mode for additional output')
     parser.add_argument('--seed', type=int, default=42, metavar='S',
-                        help='Random seed (default: 42)')
-
+                        help='Random seed for reproducibility (default: 42)')
     parser.add_argument('--default-device', type=str, default='cuda',
-                        help='Default Device(cuda, mps, cpu)')
-
+                        help='Device to use for computation (e.g., cuda, mps, cpu)')
     parser.add_argument('--default-data-path', type=str, default='./data',
-                        help='Default data path')
-
+                        help='Path to the default dataset directory (default: ./data)')
     parser.add_argument('--default-assets-path', type=str, default='./assets',
-                        help='Default assets path, for stand alone data not belonging to a dataset.')
-
+                        help='Path to the default assets directory for standalone data (default: ./assets)')
     parser.add_argument('--save-model', action='store_true', default=False,
-                        help='For saving the current model')
+                        help='Flag to save the current model state (default: False)')
 
-    # Parse only known arguments to allow for dynamic extension by the caller
-    args, _ = parser.parse_known_args()
-
-    # Load configuration if `load_config` is True
-    config = None
-    if load_config:
-        try:
-            from common.utils.config import Config  # Import only if needed
-            config = Config(args.config_path)
-        except ImportError:
-            print(
-                "Error: Config module could not be imported. Ensure `common.utils.config` is available.")
-
-    return parser, config
-
-# Example usage:
-# parser, config = get_args(load_config=True)
-# parser.add_argument('--new-arg', type=int, default=5, help='A new custom argument')
-# args = parser.parse_args()  # This allows the caller to parse additional arguments
-# print(args)
-# if config:
-#     print(config)
+    return parser

@@ -9,7 +9,7 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
 
 
 class M(torch.nn.Module):
@@ -44,7 +44,7 @@ def get_args():
     Returns:
         Namespace: Parsed command-line arguments.
     """
-    parser, _ = get_common_args()
+    parser = get_common_args()
     return parser.parse_args()
 
 

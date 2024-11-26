@@ -1,7 +1,45 @@
 import gc
+import os
 import time
+from typing import Optional
 
 import torch
+
+
+def load_config_file(config_path: str) -> Optional[object]:
+    """
+    Loads configuration parameters from a JSON file.
+
+    Args:
+        config_path (str): Path to the configuration JSON file.
+
+    Returns:
+        Optional[object]: An instance of the `Config` object if the file is successfully loaded, 
+        or `None` if the file is not found, invalid, or if the `Config` class cannot be imported.
+
+    Raises:
+        FileNotFoundError: If the specified configuration file does not exist.
+        Exception: If any other error occurs during configuration loading.
+
+    Note:
+        Ensure that the `Config` class is defined in `common.utils.config` and handles
+        JSON parsing appropriately.
+    """
+    if not os.path.isfile(config_path):
+        raise FileNotFoundError(f"Configuration file not found: {config_path}")
+
+    try:
+        from common.utils.config import Config  # Import only when needed
+        return Config(config_path)
+    except ImportError as e:
+        print(
+            "Error: Config module could not be imported. Ensure `common.utils.config` is available.")
+        print(f"Details: {e}")
+    except Exception as e:
+        print(f"Error: Failed to load configuration from {config_path}.")
+        print(f"Details: {e}")
+    
+    return None
 
 
 def log_to_tensorboard(writer, tag, value, step):

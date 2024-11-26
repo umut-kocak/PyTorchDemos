@@ -12,7 +12,7 @@ from torchvision.models.detection import (KeypointRCNN_ResNet50_FPN_Weights,
 from torchvision.transforms import v2
 from torchvision.utils import draw_keypoints
 
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
 from common.utils.visualise import display_grid
 
 # Default values as constants
@@ -38,7 +38,7 @@ def get_args():
     Returns:
         argparse.Namespace: Parsed arguments with defaults or overridden values.
     """
-    parser, _ = get_common_args()
+    parser = get_common_args()
 
     # Image input
     parser.add_argument(

@@ -10,7 +10,8 @@ from torchvision import datasets, transforms
 from torchvision.utils import make_grid
 
 from common.models import STNNet
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
+from common.utils.helper import load_config_file
 from common.utils.helper import select_default_device
 from common.utils.train import train_and_evaluate
 from common.utils.visualise import convert_image_np
@@ -27,9 +28,7 @@ def get_args():
     Returns:
         argparse.Namespace: Parsed arguments with added configuration attributes.
     """
-    parser, config = get_common_args(True)
-    # Apply configuration overrides
-    config.learning_rate = OVERRIDE_LEARNING_RATE
+    parser = get_common_args()
 
     # Set default values for configuration attributes
     parser.add_argument(
@@ -40,7 +39,9 @@ def get_args():
 
     # Parse the command-line arguments
     args = parser.parse_args()
-    args.config = config
+    args.config = load_config_file(args.config_path)
+    # Apply configuration overrides
+    args.config.learning_rate = OVERRIDE_LEARNING_RATE
     return args
 
 

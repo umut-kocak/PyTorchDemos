@@ -13,12 +13,12 @@ from torchvision.models.detection import (FasterRCNN_ResNet50_FPN_Weights,
 from torchvision.transforms import v2
 from torchvision.utils import draw_bounding_boxes, make_grid
 
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
 from common.utils.visualise import display_grid
 
 # Default values as constants
 DEFAULT_IMAGE_FILE = "dog1.jpg"
-DEFAULT_IMAGE_FILE2 = "dog2.jpg"
+DEFAULT_IMAGE_FILE2 = "dogs.jpg"
 
 
 def get_args():
@@ -29,7 +29,7 @@ def get_args():
         Namespace: Parsed arguments, including configurations for the model URL,
                    output model filename, and test image filenames.
     """
-    parser, _ = get_common_args()
+    parser = get_common_args()
     parser.add_argument('--input-image-file-name', type=str, default=DEFAULT_IMAGE_FILE,
                         help='First image file to test the model with')
     parser.add_argument('--input-image-file-name2', type=str, default=DEFAULT_IMAGE_FILE2,
@@ -78,7 +78,6 @@ def main():
     batch = torch.stack([transform(img) for img in images])
     with torch.no_grad():
         outputs = model(batch)
-    # print(outputs)
 
     # Plot the bounding boxes detedted by FasterRCNN with ascore greater than
     # a given threshold.

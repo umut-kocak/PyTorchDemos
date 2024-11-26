@@ -9,7 +9,7 @@ import torch
 from functorch.experimental.control_flow import cond
 from torch.export import Dim, export
 
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
 
 
 class MyModule(torch.nn.Module):
@@ -113,7 +113,7 @@ def main():
     Entry point of the script.
     Demonstrates various functionalities of torch.export with examples.
     """
-    args = get_common_args()[0].parse_args()
+    args = get_common_args().parse_args()
     torch.manual_seed(args.seed)
 
     print("Exporting basic model example...")

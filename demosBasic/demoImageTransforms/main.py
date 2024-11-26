@@ -10,7 +10,7 @@ from torchvision import tv_tensors
 from torchvision.io import read_image
 from torchvision.transforms import v2
 
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
 from common.utils.visualise import (display_grid_adapter,
                                     display_grid_with_annotations)
 
@@ -25,7 +25,7 @@ def get_args():
     Returns:
         argparse.Namespace: Parsed arguments including the default image filename.
     """
-    parser, _ = get_common_args()
+    parser = get_common_args()
     parser.add_argument('--default-image-file-name', default=DEFAULT_IMAGE_FILE,
                         help='Default example image filename')
     return parser.parse_args()

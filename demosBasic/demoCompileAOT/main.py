@@ -8,7 +8,7 @@ import torch
 from torchvision.models import ResNet18_Weights, resnet18
 
 import common.utils.helper as helper
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
 
 # Default model export filename
 DEFAULT_MODEL_FILENAME = "resnet18_pt.so"
@@ -21,7 +21,7 @@ def get_args():
     Returns:
         argparse.Namespace: Parsed arguments.
     """
-    parser, _ = get_common_args()
+    parser = get_common_args()
     parser.add_argument('--output-model-file-name', default=DEFAULT_MODEL_FILENAME,
                         help='File name for the exported model (default: resnet18_pt.so)')
     return parser.parse_args()

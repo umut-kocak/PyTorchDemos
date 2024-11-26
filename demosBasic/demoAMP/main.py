@@ -6,7 +6,7 @@ import torch
 
 import common.utils.helper as helper
 import common.utils.train as train
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
 
 # Default values as constants
 DEFAULT_INPUT_SIZE = 4096
@@ -44,7 +44,7 @@ def get_args():
     Returns:
         argparse.Namespace: Parsed arguments with added configuration attributes.
     """
-    parser, config = get_common_args(True)
+    parser = get_common_args()
 
     parser.add_argument('--input-size', type=int, default=DEFAULT_INPUT_SIZE,
                         help='Input size to the model (default: 4096)')
@@ -56,7 +56,7 @@ def get_args():
                         help='Number of batches of the data (default: 50)')
 
     args = parser.parse_args()
-    args.config = config
+    args.config = helper.load_config_file(args.config_path)
     return args
 
 

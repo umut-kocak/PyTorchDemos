@@ -14,7 +14,8 @@ import torchvision.transforms as transforms
 from PIL import Image
 
 from common.models import SuperResolutionNet
-from common.utils.arg_parser import get_args as get_common_args
+import common.utils.helper as helper
+from common.utils.arg_parser import get_common_args
 
 # Default values as constants
 DEFAULT_MODEL_URL = "https://s3.amazonaws.com/pytorch/test_data/export/superres_epoch100-44c6958e.pth"
@@ -30,7 +31,7 @@ def get_args():
         args (Namespace): Parsed arguments, including configurations for the model URL,
                           output model filename, and test image filename.
     """
-    parser, config = get_common_args(True)
+    parser = get_common_args()
 
     parser.add_argument('--model-url', type=str, default=DEFAULT_MODEL_URL,
                         help='URL for the pretrained model weights')
@@ -40,7 +41,7 @@ def get_args():
                         help='Image file to test the model with')
 
     args = parser.parse_args()
-    args.config = config
+    args.config = helper.load_config_file(args.config_path)    
     return args
 
 

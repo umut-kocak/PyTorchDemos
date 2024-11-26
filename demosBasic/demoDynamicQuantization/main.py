@@ -9,7 +9,8 @@ import torch
 import torch.nn as nn
 import torch.quantization
 
-from common.utils.arg_parser import get_args as get_common_args
+import common.utils.helper as helper
+from common.utils.arg_parser import get_common_args
 
 # Constants
 TEMP_FILE_PATH = "temp.p"
@@ -51,7 +52,7 @@ def get_args():
     Returns:
         argparse.Namespace: Parsed arguments.
     """
-    parser, config = get_common_args(True)
+    parser = get_common_args()
 
     parser.add_argument('--model-dimension', type=int, default=8,
                         help='Dimension of LSTM (default: 8)')
@@ -61,7 +62,7 @@ def get_args():
                         help='Length of the input sequence (default: 20)')
 
     args = parser.parse_args()
-    args.config = config
+    args.config = helper.load_config_file(args.config_path)
     return args
 
 

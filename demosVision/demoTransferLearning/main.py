@@ -18,7 +18,8 @@ from PIL import Image
 from torch.optim import lr_scheduler
 from torchvision import datasets, models, transforms
 
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
+from common.utils.helper import load_config_file
 from common.utils.helper import select_default_device
 from common.utils.train import train_single_epoch
 from common.utils.visualise import display_image
@@ -42,10 +43,7 @@ def get_args():
     Returns:
         argparse.Namespace: Parsed arguments with added configuration attributes.
     """
-    parser, config = get_common_args(True)
-    # Apply configuration overrides
-    config.batch_size = OVERRIDE_BATCH_SIZE
-    config.moementum = OVERRIDE_MOMENTUM
+    parser = get_common_args()
 
     parser.add_argument('--default-dataset', type=str, default=DEFAULT_DATASET,
                         help='Default dataset folder within data path')
@@ -59,7 +57,10 @@ def get_args():
                         help="Step size for the optimizer.")
 
     args = parser.parse_args()
-    args.config = config
+    args.config = load_config_file(args.config_path)
+    # Apply configuration overrides
+    args.config.batch_size = OVERRIDE_BATCH_SIZE
+    args.config.moementum = OVERRIDE_MOMENTUM
     return args
 
 

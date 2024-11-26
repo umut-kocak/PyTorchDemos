@@ -8,7 +8,7 @@ import torch
 import torchvision.models as models
 from torch.profiler import ProfilerActivity, profile, record_function
 
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
 
 
 def get_args():
@@ -18,7 +18,7 @@ def get_args():
     Returns:
         args (Namespace): Parsed command-line arguments, including profiler output filename.
     """
-    parser, _ = get_common_args()
+    parser = get_common_args()
     parser.add_argument('--profiler-output-file-name', type=str, default='performance_trace',
                         help='Output filename prefix for profiling trace results')
     return parser.parse_args()
@@ -85,7 +85,7 @@ def trace_long_running_tasks(model, inputs, filename_prefix):
     def trace_handler(prof):
         output = prof.key_averages().table(sort_by="self_cuda_time_total", row_limit=10)
         logging.info(output)
-        export_trace(prof, f"{filename_prefix}_step_{prof.step_num}")
+        prof.export_chrome_trace(f"{filename_prefix}_step_{prof.step_num}.json")
 
     with profile(
         activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],

@@ -10,7 +10,7 @@ import torch.nn.utils.prune as prune
 
 import common.utils.helper as helper
 from common.models import LeNet
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
 
 
 def get_args():
@@ -20,9 +20,9 @@ def get_args():
     Returns:
         Namespace: Parsed arguments including configuration settings.
     """
-    parser, config = get_common_args(True)
+    parser = get_common_args()
     args = parser.parse_args()
-    args.config = config
+    args.config = helper.load_config_file(args.config_path)
     return args
 
 

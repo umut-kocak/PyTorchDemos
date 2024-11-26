@@ -10,7 +10,8 @@ from torchvision import datasets
 from torchvision.transforms import ToTensor
 
 from common.models import ClassificationNet as ClassificationNet
-from common.utils.arg_parser import get_args as get_common_args
+from common.utils.arg_parser import get_common_args
+from common.utils.helper import load_config_file
 from common.utils.helper import select_default_device
 from common.utils.train import train_and_evaluate
 
@@ -22,9 +23,9 @@ def get_args():
     Returns:
         argparse.Namespace: Parsed arguments with added configuration attributes.
     """
-    parser, config = get_common_args(True)
+    parser = get_common_args()
     args = parser.parse_args()
-    args.config = config
+    args.config = load_config_file(args.config_path)
     return args
 
 
