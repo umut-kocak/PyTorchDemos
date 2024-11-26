@@ -1,11 +1,24 @@
+"""
+Argument Parser for PyTorch Demo Application.
+
+This module provides a utility to generate a command-line argument parser for configuring
+the PyTorch Demo application. The parser includes common arguments for setting paths,
+random seeds, computation devices, and runtime options.
+
+Usage:
+    - Import and call `get_common_args` to obtain an argument parser with predefined
+      options tailored for the PyTorch Demo application.
+    - Extend or customize the argument parser to add application-specific options.
+"""
 import argparse
+
 
 def get_common_args() -> argparse.ArgumentParser:
     """
     Creates and returns an argument parser for the PyTorch Demo application.
 
     Returns:
-        argparse.ArgumentParser: An ArgumentParser instance with pre-defined arguments 
+        argparse.ArgumentParser: An ArgumentParser instance with pre-defined arguments
         for configuring the PyTorch Demo.
 
     Command-Line Arguments:

@@ -5,8 +5,8 @@ time and memory usage, and traces long-running tasks with customizable profiling
 import logging
 
 import torch
-import torchvision.models as models
 from torch.profiler import ProfilerActivity, profile, record_function
+from torchvision import models
 
 from common.utils.arg_parser import get_common_args
 
@@ -85,7 +85,9 @@ def trace_long_running_tasks(model, inputs, filename_prefix):
     def trace_handler(prof):
         output = prof.key_averages().table(sort_by="self_cuda_time_total", row_limit=10)
         logging.info(output)
-        prof.export_chrome_trace(f"{filename_prefix}_step_{prof.step_num}.json")
+        prof.export_chrome_trace(
+            f"{filename_prefix}_step_{
+                prof.step_num}.json")
 
     with profile(
         activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
@@ -93,7 +95,7 @@ def trace_long_running_tasks(model, inputs, filename_prefix):
             skip_first=2, wait=1, warmup=1, active=2),
         on_trace_ready=trace_handler
     ) as p:
-        for idx in range(10):
+        for _ in range(10):
             model(inputs)
             p.step()  # Step through the schedule
 

@@ -1,11 +1,39 @@
+"""
+Visualization utilities for PyTorch Tensors and PIL Images with support for bounding boxes.
+
+This module provides functions for visualizing images, grids of images, and annotated images with bounding boxes.
+It supports both PyTorch Tensors (in CHW format) and PIL Images, and offers conversions between these formats
+to facilitate seamless integration.
+
+Features:
+- Convert PyTorch Tensors to numpy arrays for visualization.
+- Display single images or grids of images with optional titles and normalization.
+- Handle PIL Images and adapt them for Tensor-based display functions.
+- Annotate images with bounding boxes for visual inspection.
+- Utility functions for converting between Tensors and PIL Images.
+
+Functions:
+    - convert_image_np: Convert a Tensor to a numpy image.
+    - display_image: Display a single image with optional normalization.
+    - display_grid: Display a grid of images with optional row titles.
+    - convert_pil_to_tensor: Convert a PIL Image to a PyTorch Tensor.
+    - display_image_adapter: Adapter to display PIL Images using display_image.
+    - display_grid_adapter: Adapter to display PIL Images using display_grid.
+    - display_grid_with_annotations: Display a grid of images with bounding boxes.
+
+Dependencies:
+    - Matplotlib for visualization.
+    - PyTorch for Tensor operations.
+    - torchvision for image transformations and utilities.
+    - PIL (Pillow) for image manipulation.
+"""
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torchvision.transforms.functional as TF
 from PIL import Image
 from torchvision.transforms.v2 import functional as F
-from torchvision.utils import (draw_bounding_boxes, draw_segmentation_masks,
-                               make_grid)
+from torchvision.utils import draw_bounding_boxes
 
 plt.rcParams["savefig.bbox"] = 'tight'
 
@@ -80,7 +108,7 @@ def display_grid(images, title=None, row_title=None,
     num_rows = len(images)
     num_cols = max(len(row) for row in images)
 
-    fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, squeeze=False)
+    _, axs = plt.subplots(nrows=num_rows, ncols=num_cols, squeeze=False)
 
     # Plot each image
     for row_idx, row in enumerate(images):
@@ -174,7 +202,7 @@ def display_grid_with_annotations(images_with_boxes, title=None):
         img, Image.Image) else img for img in images]
 
     # Create the plot
-    fig, axs = plt.subplots(1, len(images), squeeze=False)
+    _, axs = plt.subplots(1, len(images), squeeze=False)
 
     for i, (img, box) in enumerate(zip(images, boxes)):
         img = img.detach()  # Detach from computation graph if it's a tensor

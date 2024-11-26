@@ -5,14 +5,12 @@ MNIST dataset, including visualization of spatial transformations.
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-import torchvision
 from torchvision import datasets, transforms
 from torchvision.utils import make_grid
 
 from common.models import STNNet
 from common.utils.arg_parser import get_common_args
-from common.utils.helper import load_config_file
-from common.utils.helper import select_default_device
+from common.utils.helper import load_config_file, select_default_device
 from common.utils.train import train_and_evaluate
 from common.utils.visualise import convert_image_np
 
@@ -111,7 +109,7 @@ def visualize_spatial_transform(model, test_loader, device):
         out_grid = convert_image_np(make_grid(transformed_tensor), mean, std)
 
         # Plot original and transformed images side by side
-        fig, axarr = plt.subplots(1, 2)
+        _, axarr = plt.subplots(1, 2)
         axarr[0].imshow(in_grid)
         axarr[0].set_title('Original Images')
         axarr[1].imshow(out_grid)

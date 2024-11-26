@@ -1,3 +1,29 @@
+"""
+Utility module for common PyTorch operations including configuration loading, logging, device selection,
+timing utilities, and memory usage monitoring.
+
+This module provides the following functionalities:
+- Loading configuration files in JSON format.
+- Logging metrics to TensorBoard.
+- Selecting an appropriate computation device (CPU, CUDA, or MPS) based on availability.
+- Measuring execution time and memory usage with optional CUDA synchronization.
+- Utilities for clearing cache and managing timers.
+
+Functions:
+    - load_config_file: Load and parse a configuration file.
+    - log_to_tensorboard: Log scalar values to TensorBoard.
+    - select_default_device: Determine the best computation device.
+    - start_timer, end_timer_and_print: Manage and log execution timing.
+    - timed_function_call: Measure execution time of a function.
+    - get_memory_usage: Retrieve peak memory usage by tensors on CUDA.
+
+Constants:
+    - START_TIME: Global variable for tracking the start time of a timed operation.
+
+Dependencies:
+    - PyTorch (torch), including optional CUDA and MPS support.
+    - Optional `Config` class for configuration handling, located in `common.utils.config`.
+"""
 import gc
 import os
 import time
@@ -14,7 +40,7 @@ def load_config_file(config_path: str) -> Optional[object]:
         config_path (str): Path to the configuration JSON file.
 
     Returns:
-        Optional[object]: An instance of the `Config` object if the file is successfully loaded, 
+        Optional[object]: An instance of the `Config` object if the file is successfully loaded,
         or `None` if the file is not found, invalid, or if the `Config` class cannot be imported.
 
     Raises:
@@ -38,7 +64,7 @@ def load_config_file(config_path: str) -> Optional[object]:
     except Exception as e:
         print(f"Error: Failed to load configuration from {config_path}.")
         print(f"Details: {e}")
-    
+
     return None
 
 
@@ -84,7 +110,7 @@ def select_default_device(args) -> torch.device:
 
 
 # Timing utilities
-start_time = None
+START_TIME = None
 
 
 def start_timer(clear_cache: bool = True):
@@ -95,14 +121,14 @@ def start_timer(clear_cache: bool = True):
         clear_cache (bool): If True, clears Python garbage collection and CUDA cache
                             to minimize memory overhead (default: True).
     """
-    global start_time
+    global START_TIME
     if clear_cache:
         gc.collect()
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
             torch.cuda.reset_max_memory_allocated()
             torch.cuda.synchronize()
-    start_time = time.time()
+    START_TIME = time.time()
 
 
 def end_timer_and_print(local_msg: str):
@@ -117,7 +143,7 @@ def end_timer_and_print(local_msg: str):
         torch.cuda.synchronize()
     end_time = time.time()
     print("\n" + local_msg)
-    print("Total execution time = {:.3f} sec".format(end_time - start_time))
+    print("Total execution time = {:.3f} sec".format(end_time - START_TIME))
     if torch.cuda.is_available():
         print(
             "Max memory used by tensors = {} bytes".format(

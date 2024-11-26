@@ -5,7 +5,6 @@ visualizing the detected bounding boxes.
 from pathlib import Path
 from typing import List
 
-import numpy as np
 import torch
 from torchvision.io import read_image
 from torchvision.models.detection import (FasterRCNN_ResNet50_FPN_Weights,
@@ -55,7 +54,9 @@ def load_images(image_paths: List[str], size: tuple = (
 
 
 def main():
-
+    """
+    Entry point for the script.
+    """
     args = get_args()
     torch.manual_seed(args.seed)
 

@@ -1,16 +1,49 @@
+"""
+Configuration Management Module.
+
+This module provides a `Config` class for managing configuration parameters used in machine
+learning or deep learning applications. It supports default configuration values and the
+ability to load and save configurations using JSON files. The class also includes methods
+for validation and customization of configuration parameters.
+
+Key Features:
+- Default configurations with standard parameters such as batch size, learning rate, and epochs.
+- Load configurations from a JSON file to override defaults.
+- Save the current configuration to a JSON file for reproducibility.
+- Automatic validation of configuration parameters to ensure correctness.
+
+Classes:
+    - Config: A class to manage and validate application configurations.
+
+Functions:
+    - load_from_json: Load configuration parameters from a JSON file.
+    - save_to_json: Save the current configuration to a JSON file.
+    - _validate_config: Validate configuration values to meet basic constraints.
+
+Usage:
+    - Initialize `Config` with or without a JSON file to use default or customized parameters.
+    - Save the current configuration to a file for later use.
+    - Override specific parameters dynamically after loading from a file or using defaults.
+
+Example:
+    config = Config("DefaultConfig.json")
+    print(config)
+    config.save_to_json("SavedConfig.json")
+"""
 import json
 
 
 class Config:
-    def __init__(self, config_file: str = None):
-        """
-        Initializes the Config class with default values. Optionally loads configurations
-        from a JSON file if provided.
+    """
+    Initializes the Config class with default values. Optionally loads configurations
+    from a JSON file if provided.
 
-        Args:
-            config_file (str, optional): Path to a JSON file containing configuration
-                                         parameters. If not provided, default values are used.
-        """
+    Args:
+        config_file (str, optional): Path to a JSON file containing configuration
+                                     parameters. If not provided, default values are used.
+    """
+
+    def __init__(self, config_file: str = None):
         # Default configuration values
         self.batch_size = 64
         self.test_batch_size = 64

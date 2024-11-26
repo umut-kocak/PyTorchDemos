@@ -3,24 +3,19 @@ This script demonstrates training and fine-tuning a ResNet18 model on the Hymeno
 including data visualization and predictions.
 """
 import os
-import time
 import urllib.request
 import zipfile
 
 import matplotlib.pyplot as plt
-import numpy as np
 import torch
-import torch.backends.cudnn as cudnn
-import torch.nn as nn
-import torch.optim as optim
 import torchvision
-from PIL import Image
+from torch import nn, optim
+from torch.backends import cudnn
 from torch.optim import lr_scheduler
 from torchvision import datasets, models, transforms
 
 from common.utils.arg_parser import get_common_args
-from common.utils.helper import load_config_file
-from common.utils.helper import select_default_device
+from common.utils.helper import load_config_file, select_default_device
 from common.utils.train import train_single_epoch
 from common.utils.visualise import display_image
 
@@ -174,10 +169,10 @@ def visualize_model_predictions(
     plt.ioff()  # Turn off interactive mode to avoid closing individual plots
 
     images_so_far = 0
-    fig = plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(12, 6))
 
     with torch.no_grad():
-        for i, (inputs, labels) in enumerate(data_loader):
+        for (inputs, labels) in data_loader:
             inputs = inputs.to(device)
             labels = labels.to(device)
 
@@ -245,13 +240,15 @@ def verify_data(args, data_url):
 
 
 def main():
-
+    """
+    Entry point for the script.
+    """
     args = get_args()
     torch.manual_seed(args.seed)
     device = select_default_device(args)
 
     data_dir = os.path.join(args.default_data_path, args.default_dataset)
-    if (not verify_data(args, DEFAULT_DATA_URL)):
+    if not verify_data(args, DEFAULT_DATA_URL):
         return
     dataloaders, class_names = load_dataloaders(
         data_dir, args.config.batch_size, args.num_workers)

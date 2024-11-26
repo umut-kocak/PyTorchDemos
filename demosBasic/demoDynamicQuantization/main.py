@@ -6,10 +6,10 @@ import os
 import timeit
 
 import torch
-import torch.nn as nn
 import torch.quantization
+from torch import nn
 
-import common.utils.helper as helper
+from common.utils import helper
 from common.utils.arg_parser import get_common_args
 
 # Constants
@@ -27,7 +27,7 @@ class LSTMForDemonstration(nn.Module):
     """
 
     def __init__(self, in_dim, out_dim, depth):
-        super(LSTMForDemonstration, self).__init__()
+        super().__init__()
         self.lstm = nn.LSTM(in_dim, out_dim, depth)
 
     def forward(self, inputs, hidden):

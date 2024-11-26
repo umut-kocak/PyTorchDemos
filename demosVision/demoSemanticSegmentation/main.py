@@ -5,7 +5,6 @@ visualizing class-specific masks and overlaying them on images.
 from pathlib import Path
 from typing import List
 
-import numpy as np
 import torch
 from torchvision.io import read_image
 from torchvision.models.segmentation import FCN_ResNet50_Weights, fcn_resnet50
@@ -120,7 +119,7 @@ def main():
     batch = torch.stack([transform(img) for img in images])
     with torch.no_grad():
         output = model(batch)['out']
-    
+
     # Generate and visualize masks for specified classes
     target_classes = ['dog', 'boat']
     categories = weights.meta["categories"]

@@ -2,12 +2,11 @@
 This script demonstrates static quantization of a PyTorch model, comparing model size,
 latency, and accuracy between FP32 and INT8 formats.
 """
-import os
 import timeit
 from pathlib import Path
 
 import torch
-import torch.nn as nn
+from torch import nn
 
 from common.utils.arg_parser import get_common_args
 
@@ -28,6 +27,9 @@ class M(torch.nn.Module):
         self.dequant = torch.ao.quantization.DeQuantStub()
 
     def forward(self, x):
+        """
+        Forward pass of the model.
+        """
         # Convert tensors to quantized form
         x = self.quant(x)
         x = self.conv(x)

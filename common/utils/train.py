@@ -1,6 +1,39 @@
+"""
+Training and Evaluation Utilities for PyTorch Models.
+
+This module provides utilities for training, evaluating, and managing PyTorch models with support for:
+- Single epoch training with optional mixed precision (AMP).
+- Model evaluation on test datasets with support for classification tasks.
+- Logging metrics to TensorBoard for monitoring.
+- Saving and loading the best model based on validation performance.
+
+Key Features:
+- `train_single_epoch`: Train a model for one epoch with support for DataLoader or explicit data.
+- `test_model`: Evaluate model performance on a test dataset and compute loss and accuracy.
+- `train_and_evaluate`: Manage the full training and evaluation loop with automatic best-model saving.
+
+Functions:
+    - device_to_str: Convert a PyTorch device object to a string representation.
+    - train_single_epoch: Train the model for one epoch with optional AMP support.
+    - test_model: Evaluate the model and log results to TensorBoard.
+    - train_and_evaluate: Execute the full training and evaluation pipeline.
+
+Dependencies:
+    - PyTorch: For deep learning model operations.
+    - Torchvision: For data utilities and transformations.
+    - TensorBoard: For logging and visualization.
+    - Common utilities for helper functions like `log_to_tensorboard`.
+
+Usage:
+    - Train and evaluate models with minimal boilerplate code.
+    - Integrate TensorBoard logging for monitoring loss and accuracy trends.
+    - Leverage mixed precision training for performance optimization.
+
+Note:
+    - Ensure that the `common.utils.helper` module and required external libraries are available.
+"""
 import os
 import tempfile
-import time
 
 import torch
 from torch.utils.data import DataLoader
@@ -22,8 +55,7 @@ def device_to_str(device):
         return 'cuda'
     if device == torch.device("mps"):
         return 'mps'
-    else:
-        return 'cpu'
+    return 'cpu'
 
 
 def test_model(
@@ -251,7 +283,7 @@ def train_and_evaluate(args, model, train_loader: DataLoader,
                 writer=writer)
 
             # Test the model and get loss and accuracy
-            test_loss, test_accuracy = test_model(
+            test_loss, _ = test_model(
                 args, model, test_loader, loss_criterion, device, True, writer)
 
             # Check if this is the best model so far

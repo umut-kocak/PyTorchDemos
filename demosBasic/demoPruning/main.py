@@ -6,10 +6,10 @@ parameter changes.
 import logging
 
 import torch
-import torch.nn.utils.prune as prune
+from torch.nn.utils import prune
 
-import common.utils.helper as helper
 from common.models import LeNet
+from common.utils import helper
 from common.utils.arg_parser import get_common_args
 
 

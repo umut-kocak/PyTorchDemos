@@ -7,7 +7,6 @@ from pathlib import Path
 import torch
 from PIL import Image
 from torchvision import tv_tensors
-from torchvision.io import read_image
 from torchvision.transforms import v2
 
 from common.utils.arg_parser import get_common_args

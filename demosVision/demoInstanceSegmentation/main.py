@@ -5,7 +5,6 @@ applying masks to images, and visualizing the results.
 from pathlib import Path
 from typing import List
 
-import numpy as np
 import torch
 from torchvision.io import read_image
 from torchvision.models.detection import (MaskRCNN_ResNet50_FPN_Weights,

@@ -9,12 +9,12 @@ import numpy as np
 import onnx
 import onnxruntime
 import torch.onnx
-import torch.utils.model_zoo as model_zoo
-import torchvision.transforms as transforms
 from PIL import Image
+from torch.utils import model_zoo
+from torchvision import transforms
 
 from common.models import SuperResolutionNet
-import common.utils.helper as helper
+from common.utils import helper
 from common.utils.arg_parser import get_common_args
 
 # Default values as constants
@@ -41,7 +41,7 @@ def get_args():
                         help='Image file to test the model with')
 
     args = parser.parse_args()
-    args.config = helper.load_config_file(args.config_path)    
+    args.config = helper.load_config_file(args.config_path)
     return args
 
 

@@ -5,11 +5,9 @@ visualizing detected keypoints with optional skeleton connectivity.
 from pathlib import Path
 
 import torch
-import torchvision.transforms.functional as F
 from torchvision.io import read_image
 from torchvision.models.detection import (KeypointRCNN_ResNet50_FPN_Weights,
                                           keypointrcnn_resnet50_fpn)
-from torchvision.transforms import v2
 from torchvision.utils import draw_keypoints
 
 from common.utils.arg_parser import get_common_args

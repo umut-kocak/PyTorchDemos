@@ -2,11 +2,7 @@
 This script demonstrates the use of `torch.export` for exporting PyTorch models with examples
 that include basic model export, handling dynamic shapes, and creating custom operators.
 """
-import argparse
-import traceback as tb
-
 import torch
-from functorch.experimental.control_flow import cond
 from torch.export import Dim, export
 
 from common.utils.arg_parser import get_common_args
@@ -24,6 +20,8 @@ class MyModule(torch.nn.Module):
         self.lin = torch.nn.Linear(100, 10)
 
     def forward(self, x, y):
+        """ Forward pass of the model.
+        """
         return torch.nn.functional.relu(self.lin(x + y), inplace=True)
 
 
@@ -51,7 +49,12 @@ def dynamic_shapes_examples():
     inp1 = torch.randn(10, 10, 2)
 
     class DynamicShapesExample1(torch.nn.Module):
+        """ Example for the DynamicShapes.
+        """
+
         def forward(self, x):
+            """ Forward pass of the model.
+            """
             x = x[:, 2:]
             return torch.relu(x)
 
@@ -59,7 +62,7 @@ def dynamic_shapes_examples():
     dynamic_shapes1 = {
         "x": {1: inp1_dim1},
     }
-    exported_dynamic_shapes_example1 = export(
+    _ = export(
         DynamicShapesExample1(), (inp1,), dynamic_shapes=dynamic_shapes1)
     print("Dynamic Shapes Example 1 exported successfully.")
 
@@ -68,7 +71,12 @@ def dynamic_shapes_examples():
     inp3 = torch.randn(8, 2)
 
     class DynamicShapesExample2(torch.nn.Module):
+        """ Example for the DynamicShapes.
+        """
+
         def forward(self, x, y):
+            """ Forward pass of the model.
+            """
             return x @ y
 
     inp2_dim0 = Dim("inp2_dim0")
@@ -78,7 +86,7 @@ def dynamic_shapes_examples():
         "x": {0: inp2_dim0, 1: inner_dim},
         "y": {0: inner_dim, 1: inp3_dim1},
     }
-    exported_dynamic_shapes_example2 = export(
+    _ = export(
         DynamicShapesExample2(), (inp2, inp3), dynamic_shapes=dynamic_shapes2)
     print("Dynamic Shapes Example 2 exported successfully.")
 
@@ -97,14 +105,18 @@ def custom_op_example():
         return torch.empty_like(x)
 
     class CustomOpExample(torch.nn.Module):
+        """ Class for the custom operator.
+        """
+
         def forward(self, x):
+            """ Forward pass of the model.
+            """
             x = torch.sin(x)
             x = torch.ops.my_custom_library.custom_op(x)
             x = torch.cos(x)
             return x
 
-    exported_custom_op_example = export(
-        CustomOpExample(), (torch.randn(3, 3),))
+    _ = export(CustomOpExample(), (torch.randn(3, 3),))
     print("Custom Op Example exported successfully.")
 
 

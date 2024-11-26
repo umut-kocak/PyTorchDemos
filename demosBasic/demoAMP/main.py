@@ -4,8 +4,7 @@ precision settings, including mixed precision with gradient scaling.
 """
 import torch
 
-import common.utils.helper as helper
-import common.utils.train as train
+from common.utils import helper, train
 from common.utils.arg_parser import get_common_args
 
 # Default values as constants

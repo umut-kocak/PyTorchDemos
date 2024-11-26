@@ -7,7 +7,7 @@ import os
 import torch
 from torchvision.models import ResNet18_Weights, resnet18
 
-import common.utils.helper as helper
+from common.utils import helper
 from common.utils.arg_parser import get_common_args
 
 # Default model export filename
