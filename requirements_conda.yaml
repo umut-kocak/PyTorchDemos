@@ -1,0 +1,15 @@
+name: /home/umut/learn_umut/PyTorchDemos-main/env
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+dependencies:
+  - python=3.12
+  - pytorch=2.5.0
+  - pytorch-cuda=12.4
+  - torchaudio=2.5.0
+  - torchvision=0.20.0
+  - matplotlib
+  - captum=0.7.0=py312h06a4308_0
+  - onnx
+  - onnxruntime

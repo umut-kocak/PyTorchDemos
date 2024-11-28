@@ -152,7 +152,7 @@ def augmentation_transforms(orig_img):
         [augmenter(orig_img) for _ in range(4)]
         for augmenter in augmenters
     ]
-    row_title = [str(policy).split('.')[-1] for policy in policies]
+    row_title = [str(policy).rsplit('.', maxsplit=1)[-1] for policy in policies]
     display_grid_adapter([[orig_img] + row for row in imgs],
                          title="AutoAugment Policies", row_title=row_title)
 

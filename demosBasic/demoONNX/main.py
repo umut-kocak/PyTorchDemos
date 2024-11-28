@@ -113,17 +113,14 @@ def test_inference(model, ort_session, x):
     start_time = time.time()
     torch_out = model(x)
     end_time = time.time()
-    logging.info(
-        f"PyTorch inference time: {
-            end_time -
-            start_time:.4f} seconds")
+    logging.info("PyTorch inference time: %.4f seconds", end_time - start_time)
 
     # ONNX inference timing
     ort_inputs = {ort_session.get_inputs()[0].name: to_numpy(x)}
     start_time = time.time()
     ort_outs = ort_session.run(None, ort_inputs)
     end_time = time.time()
-    logging.info(f"ONNX inference time: {end_time - start_time:.4f} seconds")
+    logging.info("ONNX inference time: %.4f seconds", end_time - start_time)
 
     # Result comparison
     np.testing.assert_allclose(
@@ -166,7 +163,7 @@ def save_super_resolved_image(ort_session, img_y, cb, cr, output_filename):
         ]).convert("RGB")
 
     final_img.save(output_filename)
-    logging.info(f"Super-resolved image saved as {output_filename}.")
+    logging.info("Super-resolved image saved as %s.", output_filename)
     return img_out_y.size
 
 
@@ -210,7 +207,7 @@ def main():
     resized_img = transforms.Resize([out_size[0], out_size[1]])(img)
     output_filename = f"./resized_{args.test_image_file_name}"
     resized_img.save(output_filename)
-    logging.info(f"Resized image saved as {output_filename}.")
+    logging.info("Resized image saved as %s.", output_filename)
 
 
 if __name__ == '__main__':

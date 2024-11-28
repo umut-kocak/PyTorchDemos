@@ -61,8 +61,11 @@ def load_config_file(config_path: str) -> Optional[object]:
         print(
             "Error: Config module could not be imported. Ensure `common.utils.config` is available.")
         print(f"Details: {e}")
-    except Exception as e:
-        print(f"Error: Failed to load configuration from {config_path}.")
+    except FileNotFoundError as e:  # Example of a specific exception
+        print(f"Error: Configuration file {config_path} not found.")
+        print(f"Details: {e}")
+    except ValueError as e:  # Example of another specific exception
+        print(f"Error: Configuration file {config_path} is invalid.")
         print(f"Details: {e}")
 
     return None
@@ -121,7 +124,7 @@ def start_timer(clear_cache: bool = True):
         clear_cache (bool): If True, clears Python garbage collection and CUDA cache
                             to minimize memory overhead (default: True).
     """
-    global START_TIME
+    global START_TIME # pylint: disable=W0603
     if clear_cache:
         gc.collect()
         if torch.cuda.is_available():
@@ -143,11 +146,9 @@ def end_timer_and_print(local_msg: str):
         torch.cuda.synchronize()
     end_time = time.time()
     print("\n" + local_msg)
-    print("Total execution time = {:.3f} sec".format(end_time - START_TIME))
+    print(f"Total execution time = {end_time - START_TIME:.3f} sec")
     if torch.cuda.is_available():
-        print(
-            "Max memory used by tensors = {} bytes".format(
-                torch.cuda.max_memory_allocated()))
+        print(f"Max memory used by tensors = {torch.cuda.max_memory_allocated()} bytes")
 
 
 def timed_function_call(fn, no_cuda: bool = False):

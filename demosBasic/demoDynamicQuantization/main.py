@@ -173,9 +173,15 @@ def main():
         quantized_lstm = torch.quantization.quantize_dynamic(
             float_lstm, {nn.LSTM, nn.Linear}, dtype=torch.qint8
         )
-    except Exception as e:
-        print(f"Quantization failed: {e}")
+    except TypeError as e:
+        print(f"Quantization failed due to a type error: {e}")
         return
+    except RuntimeError as e:
+        print(f"Quantization failed due to a runtime error: {e}")
+        return
+    except Exception as e:
+        print(f"An unexpected error occurred during quantization: {e}")
+        raise  # Re-raise the original exception after handling
 
     # Display model structures
     print('Floating-point LSTM:')

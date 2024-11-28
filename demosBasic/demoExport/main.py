@@ -96,9 +96,9 @@ def custom_op_example():
     Demonstrates creating and exporting a custom operator with torch.export.
     """
     @torch.library.custom_op("my_custom_library::custom_op", mutates_args={})
-    def custom_op(input: torch.Tensor) -> torch.Tensor:
+    def custom_op(tensor_input: torch.Tensor) -> torch.Tensor:
         print("Custom_op called!")
-        return torch.relu(input)
+        return torch.relu(tensor_input)
 
     @custom_op.register_fake
     def custom_op_meta(x):

@@ -11,15 +11,12 @@ instance segmentation, and semantic segmentation. Some common functionality is a
 
 To run these demos successfully, follow these steps:
 
-- **Create the Conda Environment**: Each demo folder contains a specific file for environment setup. Use this file to create a corresponding Conda environment.
+- **Create the Conda Environment**: Use the `requirements_conda` file to create a corresponding Conda environment.
 
   ```bash
-  cd demosBasic
-  conda create --name <env_name> --file conda_environment_specific.txt
-  cd ..
+  conda env create -f ./requirements_conda.yaml --prefix ./env
+  conda activate ./env
   ```
-
-Replace <env_name> with your preferred environment name.
 
 - **Run the Demo in Module Mode**: After setting up the environment, run the demo from the root directory in module mode. For example:
 

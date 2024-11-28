@@ -82,8 +82,9 @@ def apply_global_pruning(model, sparsity=0.3):
         amount=sparsity,
     )
     sparsity_percentage = calculate_global_sparsity(model)
-    logging.info(
-        f"After global pruning with {sparsity * 100}% sparsity: {sparsity_percentage:.2f}%")
+
+    logging.info("After global pruning with %d%% sparsity: %.2f%%", sparsity * 100, sparsity_percentage)
+
 
 
 def calculate_global_sparsity(model):

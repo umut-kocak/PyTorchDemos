@@ -74,7 +74,7 @@ class Config:
             json.JSONDecodeError: If the JSON file is not valid.
         """
         try:
-            with open(config_file, 'r') as f:
+            with open(config_file, 'r', encoding='utf-8') as f:
                 config_data = json.load(f)
 
             # Set attributes dynamically based on the JSON keys
@@ -100,7 +100,7 @@ class Config:
             config_file (str): Path to the JSON file where the configuration should be saved.
         """
         try:
-            with open(config_file, 'w') as f:
+            with open(config_file, 'w', encoding='utf-8') as f:
                 json.dump(self.__dict__, f, indent=4)
             print(f"Configuration saved to '{config_file}' successfully.")
         except IOError as e:

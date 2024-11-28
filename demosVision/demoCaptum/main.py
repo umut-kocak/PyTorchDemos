@@ -53,7 +53,7 @@ def load_image(image_path):
         img = Image.open(image_path).convert('RGB')
         return img
     except Exception as e:
-        raise FileNotFoundError(f"Error loading image at {image_path}: {e}")
+        raise FileNotFoundError(f"Error loading image at {image_path}: {e}") from e
 
 
 def preprocess_image(img):
